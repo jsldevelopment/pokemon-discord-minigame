@@ -21,3 +21,6 @@ for all necessary API requests for true registration of users into a database.
 > "And what should we call you?"
 
 > ""
+
+## Sanity Checks
+1. Do you have the proper intents on the intent array?
