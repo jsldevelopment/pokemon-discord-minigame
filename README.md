@@ -24,3 +24,10 @@ for all necessary API requests for true registration of users into a database.
 
 ## Sanity Checks
 1. Do you have the proper intents on the intent array?
+
+## TODO:
+1. refactor to seperate registration logic from other buttons/slash commands
+2. connect to couchbase
+3. register user w/ json built from menu selections
+4. after registration, assign basic roles (trainer) to user
+5. send user to general lobby
