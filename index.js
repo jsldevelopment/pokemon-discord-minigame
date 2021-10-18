@@ -1,9 +1,10 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
-const { embeds } = require ('./buttons/buttonPrompts.js');
-const { rowBeginRegistration } = require('./buttons/buttonRows.js');
-const { buttonMap } = require('./buttons/buttonMap.js');
+const { embeds } = require ('./messages/messagePrompts.js');
+const { rowBeginRegistration } = require('./messages/messageRows.js');
+const { messageMap } = require('./messages/messageMap.js');
+const { messageRows } = require('./messages/messageRows.js');
 
 // instantiate client and intents
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
@@ -29,10 +30,8 @@ client.once('ready', () => {
 
 // wehn a new member joins server
 client.on('guildMemberAdd', async member => {
-	// prompt the user to BEGIN the registration process. the execute function on the BEGIN button
-	// will instantiate an object that holds the stage of registration, as well as the JSON
-	// that will be used to define the user in DB.
-	await member.send({embeds: [embeds.embedBegin], components: [rowBeginRegistration.data.buttons]});
+	// send opening message
+	await member.send( messageMap["welcomeMessage"].prompt );
 });
 
 // as of now, all interactions are either slash commands or buttons
@@ -44,9 +43,15 @@ client.on('interactionCreate', async interaction => {
 
 	} else if (interaction.isMessageComponent()) {
 
-		let userMap = client.registeringUsers;
-
-		buttonMap[interaction.customId].execute(interaction, userMap);
+		// change this to an options object
+		console.log('top level ' + interaction);
+		messageMap[interaction.customId].execute(
+			interaction, 
+			{
+				userMap: client.registeringUsers, 
+				user: interaction.user.id,
+				btnId: interaction.customId
+			});
 
 	}
 });

@@ -7,7 +7,16 @@ const btnBeginRegistration = {
     button: new MessageButton()
         .setStyle('PRIMARY')
         .setCustomId('btnBeginRegistration')
-        .setLabel('Begin')
+        .setLabel('Begin'),
+    execute: async function (interaction, options, prompt) {
+        if (!options.userMap.user) {
+            options.userMap.set(options.user, { 'id': options.user });
+            console.log('row interaction: ' + interaction);
+            await interaction.reply(prompt);
+        } else {
+            await interaction.reply(prompt);
+        }
+    }
 }
 
 var rowBeginRegistration = new MessageActionRow()
@@ -22,7 +31,15 @@ var rowBeginRegistration = new MessageActionRow()
          .setStyle('PRIMARY')
          .setEmoji({
              "id": "898633695748046848",
-         })
+         }),
+    execute: async function (interaction, userMap) {
+        if (!userMap.get(interaction.user.id).avatar) {
+            await interaction.reply(this.prompt);
+        } else {
+            await interaction.reply({embeds: [embeds.embedBegin], components: [rowBeginRegistration.data.buttons]});
+        }
+        userMap.get(interaction.user.id).avatar = 'avatar1';
+    }
  }
  
  const btnAvatar2 = {
@@ -31,7 +48,15 @@ var rowBeginRegistration = new MessageActionRow()
          .setStyle('PRIMARY')
          .setEmoji({
              "id": "898633695605444658",
-         })
+         }),
+    execute: async function (interaction, userMap) {
+        if (!userMap.get(interaction.user.id).avatar) {
+            await interaction.reply(this.prompt);
+        } else {
+            await interaction.reply({embeds: [embeds.embedBegin], components: [rowBeginRegistration.data.buttons]});
+        }
+        userMap.get(interaction.user.id).avatar = 'avatar2';
+    }
  }
  
  var rowSelectAvatar = new MessageActionRow()
@@ -98,7 +123,7 @@ var rowSelectStarter = new MessageActionRow()
  */
  const btnConfirmReg = {
     button: new MessageButton()
-        .setCustomId('btnRules')
+        .setCustomId('btnConfirmReg')
         .setStyle('PRIMARY')
         .setLabel('Confirm')
 }
@@ -114,6 +139,9 @@ module.exports = {
         data: {
             name: 'rowBeginRegistration',
             buttons: rowBeginRegistration
+        },
+        buttons: {
+            btnBeginRegistration: btnBeginRegistration
         }
     },
     rowSelectAvatar: {
