@@ -3,145 +3,201 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 /** 
  *  Begin Registration button rows.
  */
-const btnBeginRegistration = {
-    button: new MessageButton()
-        .setStyle('PRIMARY')
-        .setCustomId('btnBeginRegistration')
-        .setLabel('Begin'),
-    execute: async function (interaction, options, prompt) {
-        if (!options.userMap.user) {
-            options.userMap.set(options.user, { 'id': options.user });
-            console.log('row interaction: ' + interaction);
-            await interaction.reply(prompt);
-        } else {
-            await interaction.reply(prompt);
+const buttonMap = {
+
+    /**
+     *  Button registration rows
+     */
+    btnBeginRegistration: {
+        button: new MessageButton()
+            .setStyle('PRIMARY')
+            .setCustomId('btnBeginRegistration')
+            .setLabel('Begin'),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user)) {
+                // reg a new empty user
+                options.userMap.set(options.user, { });
+                return ["send", "selectAvatarMessage"];
+            }
+            return ["update", "welcomeMessage"];
+        }
+    },
+
+    /** 
+     *  Avatar Selection button rows.
+     */
+    btnAvatar1: {
+        button: new MessageButton()
+            .setCustomId('btnAvatar1')
+            .setStyle('PRIMARY')
+            .setEmoji({
+                "id": "898633695748046848",
+            }),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).avatar) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    avatar: 'avatar1' 
+                });
+                return ["send", "selectStarterMessage"];
+            }
+            options.userMap.get(options.user).avatar = 'avatar1';
+            return ["update", "selectAvatarMessage"];
+        }
+    },
+    
+    btnAvatar2: {
+        button: new MessageButton()
+            .setCustomId('btnAvatar2')
+            .setStyle('PRIMARY')
+            .setEmoji({
+                "id": "898633695605444658",
+            }),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).avatar) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    avatar: 'avatar2' 
+                });
+                return ["send", "selectStarterMessage"];
+            }
+            options.userMap.get(options.user).avatar = 'avatar2';
+            return ["update", "selectAvatarMessage"];
+        }
+    },
+    
+    /** 
+     *  Starter Selection button rows.
+     */
+    btnStarter1: {
+        button: new MessageButton()
+            .setCustomId('btnStarter1')
+            .setStyle('PRIMARY')
+            .setEmoji({
+                "id": "899008800806273164",
+            }),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).starter) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    starter: 'starter1' 
+                });
+                return ["send", "confirmRulesMessage"];
+            }
+            options.userMap.get(options.user).avatar = 'starter1';
+            return ["update", "selectStarterMessage"];
+        }
+    },
+
+    btnStarter2: {
+        button: new MessageButton()
+            .setCustomId('btnStarter2')
+            .setStyle('PRIMARY')
+            .setEmoji({
+                "id": "899008800785317998",
+            }),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).starter) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    starter: 'starter2' 
+                });
+                return ["send", "confirmRulesMessage"];
+            }
+            options.userMap.get(options.user).avatar = 'starter2';
+            return ["update", "selectStarterMessage"];
+        }
+    },
+
+    btnStarter3: {
+        button: new MessageButton()
+            .setCustomId('btnStarter3')
+            .setStyle('PRIMARY')
+            .setEmoji({
+                "id": "899008800831442944",
+            }),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).starter) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    starter: 'starter3' 
+                });
+                return ["send", "confirmRulesMessage"];
+            }
+            options.userMap.get(options.user).avatar = 'starter3';
+            return ["update", "selectStarterMessage"];
+        }
+    },
+
+    /** 
+     *  Rules button rows.
+     */
+    btnRules: {
+        button: new MessageButton()
+            .setCustomId('btnRules')
+            .setStyle('PRIMARY')
+            .setEmoji({ "id": "899008800806273164" }),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).rulesAcknowledged) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    rulesAcknowledged: true
+                });
+                return ["send", "confirmRegistrationMessage"];
+            }
+            return ["update", "confirmRulesMessage"];
+        }
+    },
+    
+    /** 
+     *  Confirm Registration button rows.
+     */
+    btnConfirmReg: {
+        button: new MessageButton()
+            .setCustomId('btnConfirmReg')
+            .setStyle('PRIMARY')
+            .setLabel('Confirm'),
+        execute: async function (options) {
+            if (!options.userMap.get(options.user).rulesAcknowledged) {
+                options.userMap.set(options.user, { 
+                    ...options.userMap.get(options.user), 
+                    rulesAcknowledged: true
+                });
+                return ["send", "confirmation"];
+            }
+            return ["update", "confirmRegistrationMessage"];
         }
     }
 }
+
 
 var rowBeginRegistration = new MessageActionRow()
-    .addComponents( btnBeginRegistration.button );
-
-/** 
- *  Avatar Selection button rows.
- */
- const btnAvatar1 = {
-     button: new MessageButton()
-         .setCustomId('btnAvatar1')
-         .setStyle('PRIMARY')
-         .setEmoji({
-             "id": "898633695748046848",
-         }),
-    execute: async function (interaction, userMap) {
-        if (!userMap.get(interaction.user.id).avatar) {
-            await interaction.reply(this.prompt);
-        } else {
-            await interaction.reply({embeds: [embeds.embedBegin], components: [rowBeginRegistration.data.buttons]});
-        }
-        userMap.get(interaction.user.id).avatar = 'avatar1';
-    }
- }
- 
- const btnAvatar2 = {
-     button: new MessageButton()
-         .setCustomId('btnAvatar2')
-         .setStyle('PRIMARY')
-         .setEmoji({
-             "id": "898633695605444658",
-         }),
-    execute: async function (interaction, userMap) {
-        if (!userMap.get(interaction.user.id).avatar) {
-            await interaction.reply(this.prompt);
-        } else {
-            await interaction.reply({embeds: [embeds.embedBegin], components: [rowBeginRegistration.data.buttons]});
-        }
-        userMap.get(interaction.user.id).avatar = 'avatar2';
-    }
- }
- 
- var rowSelectAvatar = new MessageActionRow()
-     .addComponents( btnAvatar1.button, btnAvatar2.button );
-
-
-/** 
- *  Starter Selection button rows.
- */
- const btnStarter1 = {
-    button: new MessageButton()
-        .setCustomId('btnStarter1')
-        .setStyle('PRIMARY')
-        .setEmoji({
-            "id": "899008800806273164",
-        })
-}
-
-const btnStarter2 = {
-    button: new MessageButton()
-        .setCustomId('btnStarter2')
-        .setStyle('PRIMARY')
-        .setEmoji({
-            "id": "899008800785317998",
-        })
-}
-
-
-const btnStarter3 = {
-    button: new MessageButton()
-        .setCustomId('btnStarter3')
-        .setStyle('PRIMARY')
-        .setEmoji({
-            "id": "899008800831442944",
-        })
-}
-
-var rowSelectStarter = new MessageActionRow()
-    .addComponents( btnStarter1.button, btnStarter2.button, btnStarter3.button );
-
-/** 
- *  Rules button rows.
- */
- const btnRules = {
-     button: new MessageButton()
-         .setCustomId('btnRules')
-         .setStyle('PRIMARY')
-         .setEmoji({
-             "id": "899008800806273164",
-         }),
-     async execute(interaction, options) {
-         await interaction.reply({
-             content: "You have selected the following settings: " + JSON.stringify(options.user),
-             components: options.components
-         });
-     }
- }
- 
- var rowConfirmRules = new MessageActionRow()
-     .addComponents( btnRules.button );
-
-/** 
- *  Confirm Registration button rows.
- */
- const btnConfirmReg = {
-    button: new MessageButton()
-        .setCustomId('btnConfirmReg')
-        .setStyle('PRIMARY')
-        .setLabel('Confirm')
-}
+.addComponents( buttonMap.btnBeginRegistration.button );
 
 var rowConfirmReg = new MessageActionRow()
-    .addComponents( btnConfirmReg.button );
+.addComponents( buttonMap.btnConfirmReg.button );
+
+var rowConfirmRules = new MessageActionRow()
+.addComponents( buttonMap.btnRules.button );
+
+var rowSelectStarter = new MessageActionRow()
+.addComponents( buttonMap.btnStarter1.button, buttonMap.btnStarter2.button, buttonMap.btnStarter3.button );
+
+var rowSelectAvatar = new MessageActionRow()
+.addComponents( buttonMap.btnAvatar1.button, buttonMap.btnAvatar2.button );
+
 
 /**
  * export all rows
  */
-module.exports = {
+exports.buttonRows = {
     rowBeginRegistration: {
         data: {
             name: 'rowBeginRegistration',
             buttons: rowBeginRegistration
         },
         buttons: {
-            btnBeginRegistration: btnBeginRegistration
+            btnBeginRegistration: buttonMap.btnBeginRegistration
         }
     },
     rowSelectAvatar: {
@@ -150,8 +206,8 @@ module.exports = {
             buttons: rowSelectAvatar
         },
         buttons: {
-            btnAvatar1: btnAvatar2,
-            btnAvatar2: btnAvatar2
+            btnAvatar1: buttonMap.btnAvatar2,
+            btnAvatar2: buttonMap.btnAvatar2
         }
     },
     rowSelectStarter: {
@@ -160,9 +216,9 @@ module.exports = {
             buttons: rowSelectStarter
         },
         buttons: {
-            btnStarter1: btnStarter1,
-            btnStarter2: btnStarter2,
-            btnStarter3: btnStarter3
+            btnStarter1: buttonMap.btnStarter1,
+            btnStarter2: buttonMap.btnStarter2,
+            btnStarter3: buttonMap.btnStarter3
         }
     },
     rowConfirmRules: {
@@ -171,16 +227,18 @@ module.exports = {
             buttons: rowConfirmRules
         },
         buttons: {
-            btnRules: btnRules
+            btnRules: buttonMap.btnRules
         }
     },
     rowConfirmReg: {
         data: {
             name: 'rowConfirmReg',
-            buttons: rowConfirmReg
+            buttons: buttonMap.rowConfirmReg
         },
         buttons: {
-            btnConfirmReg: btnConfirmReg
+            btnConfirmReg: buttonMap.btnConfirmReg
         }
     }
 }
+
+exports.buttonMap = buttonMap;

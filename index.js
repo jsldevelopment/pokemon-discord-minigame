@@ -1,10 +1,8 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
-const { embeds } = require ('./messages/messagePrompts.js');
-const { rowBeginRegistration } = require('./messages/messageRows.js');
 const { messageMap } = require('./messages/messageMap.js');
-const { messageRows } = require('./messages/messageRows.js');
+const { buttonMap } = require('./messages/messageRows.js');
 
 // instantiate client and intents
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
@@ -28,10 +26,8 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
-// wehn a new member joins server
 client.on('guildMemberAdd', async member => {
-	// send opening message
-	await member.send( messageMap["welcomeMessage"].prompt );
+	await member.send( messageMap["welcomeMessage"].message );
 });
 
 // as of now, all interactions are either slash commands or buttons
@@ -43,14 +39,21 @@ client.on('interactionCreate', async interaction => {
 
 	} else if (interaction.isMessageComponent()) {
 
-		// change this to an options object
-		console.log('top level ' + interaction);
-		messageMap[interaction.customId].execute(
-			interaction, 
-			{
+		await buttonMap[interaction.customId]
+			.execute({
 				userMap: client.registeringUsers, 
 				user: interaction.user.id,
 				btnId: interaction.customId
+			})
+			.then((responseMessage) => {
+				if(responseMessage[0] === "update") {
+					interaction.update(messageMap[responseMessage[1]].message);
+				} else if (responseMessage[0] === "send"){
+					interaction.reply(messageMap[responseMessage[1]].message);
+				}
+			})
+			.then(() => {
+				console.log(client.registeringUsers.get(interaction.user.id));
 			});
 
 	}
