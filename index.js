@@ -1,8 +1,8 @@
 const fs = require('fs');
 const { Client, Collection, Intents } = require('discord.js');
 const { token } = require('./config.json');
-const { messageMap } = require('./messages/messageMap.js');
-const { buttonMap } = require('./messages/messageRows.js');
+const messageManager = require('./managers/messageManager.js');
+
 
 // instantiate client and intents
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
@@ -27,8 +27,7 @@ client.once('ready', () => {
 });
 
 client.on('guildMemberAdd', async member => {
-	// check database to see if this is an existing user
-	await member.send( messageMap["welcomeMessage"].message );
+	messageManager.sendPrivateMessage(member, "welcomeMessage");
 });
 
 // as of now, all interactions are either slash commands or buttons
@@ -36,33 +35,19 @@ client.on('interactionCreate', async interaction => {
 
 	if (interaction.isCommand()) {
 		
-		executeCommand(interaction);
+		// implement command manager
 
 	} else if (interaction.isMessageComponent()) {
 
-		await buttonMap[interaction.customId]
-			.execute({
+		messageManager.onButtonPress(
+			interaction,
+			interaction.customId, 
+			{
 				userMap: client.registeringUsers, 
 				user: interaction.user.id,
 				btnId: interaction.customId
-			})
-			.then((res) => {
-				if(res.update) {
-					interaction.update(messageMap[res.update].message);
-				} else if (res.send){
-					interaction.reply(messageMap[res.send].message);
-				} else if (responseMessage[0] === "complete") {
-					// interaction.channel.messages.fetch( { limit: Object.keys(messageMap).length } )
-					// 	.then ( messages => {
-					// 		messages.forEach( msg => {
-					// 			msg.delete();
-					// 		})
-					// 	});
-				}
-			})
-			.then(() => {
-				console.log(client.registeringUsers.get(interaction.user.id));
-			});
+			}
+		);
 
 	}
 });

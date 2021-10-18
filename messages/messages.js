@@ -1,5 +1,5 @@
-const { prompts, embeds } = require ('./messagePrompts.js');
-const { buttonRows } = require('./messageRows.js');
+const { embeds } = require ('../util/prompts.js');
+const { buttonRows } = require('./buttonRows.js');
 
 const messageMap = {
     welcomeMessage: {

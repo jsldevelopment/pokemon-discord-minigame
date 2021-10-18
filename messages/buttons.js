@@ -1,8 +1,5 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageButton } = require('discord.js');
 
-/** 
- *  Begin Registration button rows.
- */
 const buttonMap = {
 
     /**
@@ -40,7 +37,7 @@ const buttonMap = {
                 return { send: "selectStarterMessage" }
             }
             options.userMap.get(options.user).avatar = 'avatar1';
-            return ["update", "selectAvatarMessage"];
+            return { update: "selectAvatarMessage" }
         }
     },
     
@@ -58,7 +55,7 @@ const buttonMap = {
                 return { send: "selectStarterMessage" }
             }
             options.userMap.get(options.user).avatar = 'avatar2';
-            return ["update", "selectAvatarMessage"];
+            return { update: "selectAvatarMessage" }
         }
     },
     
@@ -69,9 +66,7 @@ const buttonMap = {
         button: new MessageButton()
             .setCustomId('btnStarter1')
             .setStyle('PRIMARY')
-            .setEmoji({
-                "id": "899008800806273164",
-            }),
+            .setLabel('Bulbasaur'),
         execute: async function (options) {
             if (!options.userMap.get(options.user).starter) {
                 options.userMap.set(options.user, { 
@@ -81,7 +76,7 @@ const buttonMap = {
                 return { send: "confirmRulesMessage" }
             }
             options.userMap.get(options.user).starter = 'starter1';
-            return ["update", "selectStarterMessage"];
+            return { update: "selectStarterMessage" }
         }
     },
 
@@ -89,9 +84,7 @@ const buttonMap = {
         button: new MessageButton()
             .setCustomId('btnStarter2')
             .setStyle('PRIMARY')
-            .setEmoji({
-                "id": "899008800785317998",
-            }),
+            .setLabel('Charmander'),
         execute: async function (options) {
             if (!options.userMap.get(options.user).starter) {
                 options.userMap.set(options.user, { 
@@ -101,7 +94,7 @@ const buttonMap = {
                 return { send: "confirmRulesMessage" }
             }
             options.userMap.get(options.user).starter = 'starter2';
-            return ["update", "selectStarterMessage"];
+            return { update: "selectStarterMessage" }
         }
     },
 
@@ -109,9 +102,7 @@ const buttonMap = {
         button: new MessageButton()
             .setCustomId('btnStarter3')
             .setStyle('PRIMARY')
-            .setEmoji({
-                "id": "899008800831442944",
-            }),
+            .setLabel('Squirtle'),
         execute: async function (options) {
             if (!options.userMap.get(options.user).starter) {
                 options.userMap.set(options.user, { 
@@ -121,7 +112,7 @@ const buttonMap = {
                 return { send: "confirmRulesMessage" }
             }
             options.userMap.get(options.user).starter = 'starter3';
-            return ["update", "selectStarterMessage"];
+            return { update: "selectStarterMessage" }
         }
     },
 
@@ -132,7 +123,7 @@ const buttonMap = {
         button: new MessageButton()
             .setCustomId('btnRules')
             .setStyle('PRIMARY')
-            .setEmoji({ "id": "899008800806273164" }),
+            .setLabel('I Agree'),
         execute: async function (options) {
             if (!options.userMap.get(options.user).rulesAcknowledged) {
                 options.userMap.set(options.user, { 
@@ -141,7 +132,7 @@ const buttonMap = {
                 });
                 return { send: "confirmRegistrationMessage" }
             }
-            return ["update", "confirmRulesMessage"];
+            return { update: "confirmRulesMessage" }
         }
     },
     
@@ -159,81 +150,10 @@ const buttonMap = {
                     ...options.userMap.get(options.user), 
                     regComplete: true
                 });
-                return ["complete", options.userMap.get(options.user)];
+                return { complete: options.userMap.get(options.user) }
             }
         }
     }
 }
 
-
-var rowBeginRegistration = new MessageActionRow()
-.addComponents( buttonMap.btnBeginRegistration.button );
-
-var rowConfirmReg = new MessageActionRow()
-.addComponents( buttonMap.btnConfirmReg.button );
-
-var rowConfirmRules = new MessageActionRow()
-.addComponents( buttonMap.btnRules.button );
-
-var rowSelectStarter = new MessageActionRow()
-.addComponents( buttonMap.btnStarter1.button, buttonMap.btnStarter2.button, buttonMap.btnStarter3.button );
-
-var rowSelectAvatar = new MessageActionRow()
-.addComponents( buttonMap.btnAvatar1.button, buttonMap.btnAvatar2.button );
-
-
-/**
- * export all rows
- */
-exports.buttonRows = {
-    rowBeginRegistration: {
-        data: {
-            name: 'rowBeginRegistration',
-            buttons: rowBeginRegistration
-        },
-        buttons: {
-            btnBeginRegistration: buttonMap.btnBeginRegistration
-        }
-    },
-    rowSelectAvatar: {
-        data: {
-            name: 'rowSelectAvatar',
-            buttons: rowSelectAvatar
-        },
-        buttons: {
-            btnAvatar1: buttonMap.btnAvatar2,
-            btnAvatar2: buttonMap.btnAvatar2
-        }
-    },
-    rowSelectStarter: {
-        data: {
-            name: 'rowSelectStarter',
-            buttons: rowSelectStarter
-        },
-        buttons: {
-            btnStarter1: buttonMap.btnStarter1,
-            btnStarter2: buttonMap.btnStarter2,
-            btnStarter3: buttonMap.btnStarter3
-        }
-    },
-    rowConfirmRules: {
-        data: {
-            name: 'rowConfirmRules',
-            buttons: rowConfirmRules
-        },
-        buttons: {
-            btnRules: buttonMap.btnRules
-        }
-    },
-    rowConfirmReg: {
-        data: {
-            name: 'rowConfirmReg',
-            buttons: rowConfirmReg
-        },
-        buttons: {
-            btnConfirmReg: buttonMap.btnConfirmReg
-        }
-    }
-}
-
-exports.buttonMap = buttonMap;
+module.exports = buttonMap;
