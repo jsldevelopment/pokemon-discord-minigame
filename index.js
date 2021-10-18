@@ -27,6 +27,7 @@ client.once('ready', () => {
 });
 
 client.on('guildMemberAdd', async member => {
+	// check database to see if this is an existing user
 	await member.send( messageMap["welcomeMessage"].message );
 });
 
@@ -45,11 +46,18 @@ client.on('interactionCreate', async interaction => {
 				user: interaction.user.id,
 				btnId: interaction.customId
 			})
-			.then((responseMessage) => {
-				if(responseMessage[0] === "update") {
-					interaction.update(messageMap[responseMessage[1]].message);
-				} else if (responseMessage[0] === "send"){
-					interaction.reply(messageMap[responseMessage[1]].message);
+			.then((res) => {
+				if(res.update) {
+					interaction.update(messageMap[res.update].message);
+				} else if (res.send){
+					interaction.reply(messageMap[res.send].message);
+				} else if (responseMessage[0] === "complete") {
+					// interaction.channel.messages.fetch( { limit: Object.keys(messageMap).length } )
+					// 	.then ( messages => {
+					// 		messages.forEach( msg => {
+					// 			msg.delete();
+					// 		})
+					// 	});
 				}
 			})
 			.then(() => {

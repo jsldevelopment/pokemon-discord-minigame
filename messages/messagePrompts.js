@@ -1,39 +1,51 @@
 const { MessageEmbed } = require('discord.js');
 
-// const avatarTextPrompt = `Welcome to the world of Pokemon! I'll be your resident pokemon expert, Professor Yew. \n In the region of <REGION NAME>, many different kinds of pokemon inhabit vast and varied environemnts. \n It's your job as a pokemon trainer to capture and befriend these pokemon. \n Before we go any further, please select an avatar.`;
-const promptBegin = "In order to get you registered for our game, we need to you to answer a few basic questions about yourself. \n"
+const promptBeginTitle = "Welcome to the world of Pokemon!";
+const promptBeginDesc = "In order to get you registered for our game, we need to you to answer a few basic questions about yourself. \n"
     + "Please step through the following prompts- and don't worry! Nothing is set in stone... (except your starter).";
-const promptAvatar = "Are you a male or female?";
-const promptStarter = "Please select a starter!";
+const promptAvatarTitle = "Select an avatar -";
+const promptAvatarDesc = "Please select the avatar you feel most suits the type of trainer you see yourself as.";
+const promptStarterTitle  = "Select your starter -";
+const promptStartDesc  = "Please choose one of the following pokemon partners to accompany you on your grand adventure.";
 const promptRules = "Press here to agree to the rules and conditions.";
 const promptComplete = "Registration complete!";
 
 const embedBegin = new MessageEmbed()
     .setColor('#0099ff')
-    .setTitle('Welcome to the world of Pokemon!')
-    .setURL('https://discord.js.org')
-    .setDescription(promptBegin);
-
+    .setTitle(promptBeginTitle)
+    .setDescription(promptBeginDesc);
+   
 const embedAvatar = new MessageEmbed()
     .setColor('#0099ff')
-    .setTitle('Welcome to the world of Pokemon!')
-    .setURL('https://discord.js.org')
-    .setDescription(promptBegin);
+    .setTitle(promptAvatarTitle)
+    .setDescription(promptAvatarDesc);
+
+const embedStarter = new MessageEmbed()
+    .setColor('#0099ff')
+    .setTitle(promptStarterTitle)
+    .setDescription(promptStartDesc);
+    
+const embedRules = new MessageEmbed()
+    .setColor('#0099ff')
+    .setDescription(promptRules);
+
+    
+const embedConfirm = new MessageEmbed()
+    .setColor('#0099ff')
+    .setDescription(promptComplete);
 
 module.exports = {
-    prompts: {
-        promptAvatar,
-        promptStarter,
-        promptRules,
-        promptComplete
-    },
     embeds: {
-        embedBegin
+        embedBegin,
+        embedAvatar,
+        embedStarter,
+        embedRules,
+        embedConfirm
     },
-    promptFunctions: {
-        getPromptComplete: (userObj) => {
-            return promptComplete + `: ${userObj}`
-        }
-    }
+    // promptFunctions: {
+    //     getPromptComplete: (userObj) => {
+    //         return promptComplete + `: ${userObj}`
+    //     }
+    // }
 };
 

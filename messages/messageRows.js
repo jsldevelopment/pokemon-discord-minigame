@@ -17,9 +17,9 @@ const buttonMap = {
             if (!options.userMap.get(options.user)) {
                 // reg a new empty user
                 options.userMap.set(options.user, { });
-                return ["send", "selectAvatarMessage"];
+                return { send: "selectAvatarMessage" }
             }
-            return ["update", "welcomeMessage"];
+            return { update: "welcomeMessage" }
         }
     },
 
@@ -30,16 +30,14 @@ const buttonMap = {
         button: new MessageButton()
             .setCustomId('btnAvatar1')
             .setStyle('PRIMARY')
-            .setEmoji({
-                "id": "898633695748046848",
-            }),
+            .setLabel('1'),
         execute: async function (options) {
             if (!options.userMap.get(options.user).avatar) {
                 options.userMap.set(options.user, { 
                     ...options.userMap.get(options.user), 
                     avatar: 'avatar1' 
                 });
-                return ["send", "selectStarterMessage"];
+                return { send: "selectStarterMessage" }
             }
             options.userMap.get(options.user).avatar = 'avatar1';
             return ["update", "selectAvatarMessage"];
@@ -50,16 +48,14 @@ const buttonMap = {
         button: new MessageButton()
             .setCustomId('btnAvatar2')
             .setStyle('PRIMARY')
-            .setEmoji({
-                "id": "898633695605444658",
-            }),
+            .setLabel('2'),
         execute: async function (options) {
             if (!options.userMap.get(options.user).avatar) {
                 options.userMap.set(options.user, { 
                     ...options.userMap.get(options.user), 
                     avatar: 'avatar2' 
                 });
-                return ["send", "selectStarterMessage"];
+                return { send: "selectStarterMessage" }
             }
             options.userMap.get(options.user).avatar = 'avatar2';
             return ["update", "selectAvatarMessage"];
@@ -82,9 +78,9 @@ const buttonMap = {
                     ...options.userMap.get(options.user), 
                     starter: 'starter1' 
                 });
-                return ["send", "confirmRulesMessage"];
+                return { send: "confirmRulesMessage" }
             }
-            options.userMap.get(options.user).avatar = 'starter1';
+            options.userMap.get(options.user).starter = 'starter1';
             return ["update", "selectStarterMessage"];
         }
     },
@@ -102,9 +98,9 @@ const buttonMap = {
                     ...options.userMap.get(options.user), 
                     starter: 'starter2' 
                 });
-                return ["send", "confirmRulesMessage"];
+                return { send: "confirmRulesMessage" }
             }
-            options.userMap.get(options.user).avatar = 'starter2';
+            options.userMap.get(options.user).starter = 'starter2';
             return ["update", "selectStarterMessage"];
         }
     },
@@ -122,9 +118,9 @@ const buttonMap = {
                     ...options.userMap.get(options.user), 
                     starter: 'starter3' 
                 });
-                return ["send", "confirmRulesMessage"];
+                return { send: "confirmRulesMessage" }
             }
-            options.userMap.get(options.user).avatar = 'starter3';
+            options.userMap.get(options.user).starter = 'starter3';
             return ["update", "selectStarterMessage"];
         }
     },
@@ -143,7 +139,7 @@ const buttonMap = {
                     ...options.userMap.get(options.user), 
                     rulesAcknowledged: true
                 });
-                return ["send", "confirmRegistrationMessage"];
+                return { send: "confirmRegistrationMessage" }
             }
             return ["update", "confirmRulesMessage"];
         }
@@ -158,14 +154,13 @@ const buttonMap = {
             .setStyle('PRIMARY')
             .setLabel('Confirm'),
         execute: async function (options) {
-            if (!options.userMap.get(options.user).rulesAcknowledged) {
+            if (!options.userMap.get(options.user).regComplete) {
                 options.userMap.set(options.user, { 
                     ...options.userMap.get(options.user), 
-                    rulesAcknowledged: true
+                    regComplete: true
                 });
-                return ["send", "confirmation"];
+                return ["complete", options.userMap.get(options.user)];
             }
-            return ["update", "confirmRegistrationMessage"];
         }
     }
 }
@@ -233,7 +228,7 @@ exports.buttonRows = {
     rowConfirmReg: {
         data: {
             name: 'rowConfirmReg',
-            buttons: buttonMap.rowConfirmReg
+            buttons: rowConfirmReg
         },
         buttons: {
             btnConfirmReg: buttonMap.btnConfirmReg
