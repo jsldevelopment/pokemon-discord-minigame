@@ -1,23 +1,15 @@
 {
-  "name": "pokemon-discord-bot",
+  "name": "prof-bot-2",
   "version": "1.0.0",
-  "description": "pokemon bot using discord js",
-  "main": "index.js",
+  "description": "",
+  "main": "Message.js",
   "scripts": {
-    "test": "nodemon index.js",
-    "commands": "node deploy-commands.js",
-    "deploy": "node deploy-commands.js && nodemon index.js"
+    "test": "nodemon index.js"
   },
-  "author": "stanky",
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "0.1.0-canary.0",
-    "discord-api-types": "^0.23.1",
-    "discord-buttons": "^4.0.0",
-    "discord.js": "^13.1.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.13"
+    "discord.js": "^13.2.0",
+    "nodemon": "^2.0.14"
   }
 }
