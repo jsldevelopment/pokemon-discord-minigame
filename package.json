@@ -4,7 +4,7 @@
   "description": "",
   "main": "Message.js",
   "scripts": {
-    "test": "nodemon index.js"
+    "test": "nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",
