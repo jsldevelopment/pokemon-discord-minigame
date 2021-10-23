@@ -4,12 +4,15 @@
   "description": "",
   "main": "Message.js",
   "scripts": {
+    "commands": "node ./deploy-commands.js",
     "test": "nodemon src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@discordjs/rest": "^0.1.0-canary.0",
     "cassandra-driver": "^4.6.3",
+    "discord-api-types": "^0.24.0",
     "discord.js": "^13.2.0",
     "nodemon": "^2.0.14"
   }
