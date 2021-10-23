@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cassandra-driver": "^4.6.3",
     "discord.js": "^13.2.0",
     "nodemon": "^2.0.14"
   }
