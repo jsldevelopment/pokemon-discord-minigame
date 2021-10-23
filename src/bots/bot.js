@@ -5,7 +5,7 @@ const { default: Collection } = require('@discordjs/collection');
 
 const bot = {
 
-    start: function(discordClient, dbClient, token) {
+    start: function(discordClient, dbClient, token, guild) {
 
         discordClient.registeringUsers = new Collection();
 
@@ -51,10 +51,9 @@ const bot = {
                     break;
                 case('confirmRegistration'):
                     await messageHandler.deleteMessage(interaction);
-                    // await insertUser(dbClient, { id: user.id, avatar: user.avatar, starter: user.starter });
+                    await insertUser(dbClient, { id: user.id, avatar: user.avatar, starter: user.starter });
                     let member = await getMember(interaction.user.id);
-                    var role = member.guild.roles.cache.find(role => role.name === "trainer");
-                    member.roles.add(role);
+                    member.roles.add(await getRole("trainer"));
                     break;
 
             }
@@ -63,15 +62,34 @@ const bot = {
 
         discordClient.login(token);
 
+
+        getGuild = async function() {
+
+            if(!discordClient) return;
+
+            return await discordClient.guilds.cache.get(guild);
+
+        },
+    
         getMember = async function(id) {
             
             if (!discordClient) return;
             
-            let member = await discordClient.guilds.cache.get('889622087822639125').members.fetch(id);
+            const guild = await getGuild();
+            let member = await guild.members.fetch(id);
             return member;
 
+        },
+
+        getRole = async function(roleId) {
+
+            if (!discordClient) return;
+
+            const guild = await getGuild();
+            return await guild.roles.cache.find(role => role.name === roleId);
+            
         }
-    
+        
     }
 
 }

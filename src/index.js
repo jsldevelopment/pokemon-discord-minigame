@@ -1,6 +1,6 @@
 const { Client, Intents } = require('discord.js');
 const cassandra = require('cassandra-driver');
-const { token, dbId, dbSecret } = require('../config.json');
+const { token, dbId, dbSecret, guild } = require('../config.json');
 const bot = require('./bots/bot.js');
 
 // instantiate client and intents
@@ -11,4 +11,4 @@ const dbClient = new cassandra.Client({
     keyspace: 'users'
 });
 
-bot.start(discordClient, dbClient, token);
+bot.start(discordClient, dbClient, token, guild);
