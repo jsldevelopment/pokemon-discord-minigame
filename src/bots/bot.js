@@ -1,69 +1,77 @@
 const messageHandler = require('../handlers/MessageHandler.js');
 const messages = require('../data/messages.js');
+const insertUser = require('../db/queries.js');
 const { default: Collection } = require('@discordjs/collection');
 
 const bot = {
 
-    start: function(client, token) {
+    start: function(discordClient, dbClient, token) {
 
-        client.registeringUsers = new Collection();
+        discordClient.registeringUsers = new Collection();
 
-        client.once('ready', () => {
+        discordClient.once('ready', () => {
             console.log('ready');
         });
 
-        client.on('guildMemberAdd', async member => {
+        discordClient.on('guildMemberAdd', async member => {
             await messageHandler.sendDirectMessage(
                 member, 
                 messages["msgWelcome"]
             );
         });
 
-        client.on('interactionCreate', async interaction => {
+        discordClient.on('interactionCreate', async interaction => {
 
-            const user = client.registeringUsers.get(interaction.user.id);
-
+            const user = discordClient.registeringUsers.get(interaction.user.id);
             switch (interaction.customId) {
 
                 case('beginRegistration'):
                     await messageHandler.updateMessage(interaction, messages.msgSelectAvatar);
-                    client.registeringUsers.set(interaction.user.id, { id: interaction.user.id });
+                    discordClient.registeringUsers.set(interaction.user.id, { id: interaction.user.id });
                     break;
                 case('selectAvatar1'):
                     await messageHandler.updateMessage(interaction, messages.msgSelectStarter);
-                    client.registeringUsers.set(interaction.user.id, { ...user, avatar: 'avatar1' });
+                    discordClient.registeringUsers.set(interaction.user.id, { ...user, avatar: 1 });
                     break;
                 case('selectAvatar2'):
                     await messageHandler.updateMessage(interaction, messages.msgSelectStarter);
-                    client.registeringUsers.set(interaction.user.id, { ...user, avatar: 'avatar2' });
+                    discordClient.registeringUsers.set(interaction.user.id, { ...user, avatar: 2 });
                     break;
                 case('selectStarter1'):
                     await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                    client.registeringUsers.set(interaction.user.id, { ...user, starter: 'starter1' });
+                    discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 1});
                     break;
                 case('selectStarter2'):
                     await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                    client.registeringUsers.set(interaction.user.id, { ...user, starter: 'starter2' });
+                    discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 2 });
                     break;
                 case('selectStarter3'):
                     await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                    client.registeringUsers.set(interaction.user.id, { ...user, starter: 'starter3' });
+                    discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 3 });
                     break;
                 case('confirmRegistration'):
                     await messageHandler.deleteMessage(interaction);
-                    console.log(client.registeringUsers.get(interaction.user.id));
-                    // give user trainer role
-                    // move them to first lobby
-                    // add user profile json to cassandra db
+                    // await insertUser(dbClient, { id: user.id, avatar: user.avatar, starter: user.starter });
+                    let member = await getMember(interaction.user.id);
+                    var role = member.guild.roles.cache.find(role => role.name === "trainer");
+                    member.roles.add(role);
                     break;
-
 
             }
 
         });
 
-        client.login(token);
+        discordClient.login(token);
 
+        getMember = async function(id) {
+            
+            if (!discordClient) return;
+            
+            let member = await discordClient.guilds.cache.get('889622087822639125').members.fetch(id);
+            return member;
+
+        }
+    
     }
 
 }

@@ -1,8 +1,14 @@
 const { Client, Intents } = require('discord.js');
-const { token } = require('../config.json');
+const cassandra = require('cassandra-driver');
+const { token, dbId, dbSecret } = require('../config.json');
 const bot = require('./bots/bot.js');
 
 // instantiate client and intents
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
+const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
+const dbClient = new cassandra.Client({
+    cloud: { secureConnectBundle: './db-connection.zip' },
+    credentials: { username: dbId, password: dbSecret},
+    keyspace: 'users'
+});
 
-bot.start(client, token);
+bot.start(discordClient, dbClient, token);
