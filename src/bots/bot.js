@@ -48,25 +48,29 @@ const bot = {
                         discordClient.registeringUsers.set(interaction.user.id, { ...user, avatar: 2 });
                         break;
                     case('selectStarter1'):
-                        await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        const starter = await queries.getRawPokemon(dbClient, { id: 1 });
-                        discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter });
+                        await messageHandler.showLoading(interaction);
+                        let starter1 = await queries.getRawPokemon(dbClient, { id: 1 });
+                        discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter1 });
+                        await messageHandler.editMessage(interaction, messages.msgConfirmRegistration);
                         break;
                     case('selectStarter2'):
-                        await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        await queries.getRawPokemon(dbClient, { id: 4 });
-                        // discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter });
+                        await messageHandler.showLoading(interaction);
+                        let starter2 = await queries.getRawPokemon(dbClient, { id: 4 });
+                        discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter2 });
+                        await messageHandler.editMessage(interaction, messages.msgConfirmRegistration);
                         break;
                     case('selectStarter3'):
-                        await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        await queries.getRawPokemon(dbClient, { id: 7 });
-                        // discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter });
+                        await messageHandler.showLoading(interaction);
+                        let starter3 = await queries.getRawPokemon(dbClient, { id: 7 });
+                        discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter3 });
+                        await messageHandler.editMessage(interaction, messages.msgConfirmRegistration);
                         break;
                     case('confirmRegistration'):
-                        await messageHandler.deleteMessage(interaction);
-                        await queries.insertUser(dbClient, { id: user.id, avatar: user.avatar, starter: user.starter });
+                        await messageHandler.showLoading(interaction);
+                        await queries.insertUser(dbClient, { id: user.id, avatar: user.avatar, party: user.party });
                         let member = await getMember(interaction.user.id);
                         member.roles.add(await getRole("trainer"));
+                        await messageHandler.deleteMessage(interaction, 1);
                         break;
 
                 }

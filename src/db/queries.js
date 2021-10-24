@@ -1,15 +1,15 @@
 module.exports = {
 
-    insertUser: async function (client, { id, avatar, starter }) {
+    insertUser: async function (client, { id, avatar, party }) {
         const query = 'INSERT INTO users (id, data) VALUES (?, ?)';
-        const params = [ id, JSON.stringify({ "avatar": avatar, "starter": starter }) ];
+        const params = [ id, JSON.stringify({ "avatar": avatar, "party": party }) ];
         await client.execute(query, params, { prepare: true });
         console.log(`user added to db ${id}`);
     },
 
-    insertPokemon: async function (client, { id, avatar, starter }) {
+    insertPokemon: async function (client, { id, avatar, party }) {
         const query = 'INSERT INTO users (id, data) VALUES (?, ?)';
-        const params = [ id, JSON.stringify({ "avatar": avatar, "starter": starter }) ];
+        const params = [ id, JSON.stringify({ "avatar": avatar, "party": party }) ];
         await client.execute(query, params, { prepare: true });
         console.log(`user added to db ${id}`);
     },
@@ -18,10 +18,8 @@ module.exports = {
         console.log(`grabbing starter id ${id} from db`);
         const query = 'SELECT data FROM pokemon_raw WHERE id=?';
         const params = [ id ];
-        await client.execute(query, params, { prepare: true }, (err, res) => {
-            console.log(`starter grabbed from db ${JSON.stringify(res.rows[0].data)}`);
-            return res.rows[0].data;
-        });
+        const data = await client.execute(query, params, { prepare: true });
+        return data.rows[0].data;
     }
 
 }
