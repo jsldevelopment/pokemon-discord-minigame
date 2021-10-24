@@ -49,15 +49,18 @@ const bot = {
                         break;
                     case('selectStarter1'):
                         await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 1});
+                        const starter = await queries.getRawPokemon(dbClient, { id: 1 });
+                        discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter });
                         break;
                     case('selectStarter2'):
                         await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 4 });
+                        await queries.getRawPokemon(dbClient, { id: 4 });
+                        // discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter });
                         break;
                     case('selectStarter3'):
                         await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 7 });
+                        await queries.getRawPokemon(dbClient, { id: 7 });
+                        // discordClient.registeringUsers.set(interaction.user.id, { ...user, party: starter });
                         break;
                     case('confirmRegistration'):
                         await messageHandler.deleteMessage(interaction);
