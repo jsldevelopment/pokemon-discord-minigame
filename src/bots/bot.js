@@ -22,7 +22,7 @@ const bot = {
 
         discordClient.on('interactionCreate', async interaction => {
 
-            if (interaction.isCommand) {
+            if (interaction.isCommand()) {
 
                 if (interaction.commandName === 'profile') {
                     await interaction.deferReply();
@@ -30,7 +30,7 @@ const bot = {
                     await interaction.editReply({ content: JSON.stringify(result) });
                 }
 
-            } else if (!interaction.isMessage) {
+            } else if (interaction.isMessageComponent()) {
                     
                 const user = discordClient.registeringUsers.get(interaction.user.id);
                 switch (interaction.customId) {
@@ -53,11 +53,11 @@ const bot = {
                         break;
                     case('selectStarter2'):
                         await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 2 });
+                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 4 });
                         break;
                     case('selectStarter3'):
                         await messageHandler.updateMessage(interaction, messages.msgConfirmRegistration);
-                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 3 });
+                        discordClient.registeringUsers.set(interaction.user.id, { ...user, starter: 7 });
                         break;
                     case('confirmRegistration'):
                         await messageHandler.deleteMessage(interaction);

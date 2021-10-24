@@ -1,15 +1,13 @@
 module.exports = {
+
     insertUser: async function (client, { id, avatar, starter }) {
-        const insert = 'INSERT INTO users (user_id, avatar, starter) VALUES (?,?,?)';
-        const params = [ id, avatar, starter ];
-        await client.execute(insert, params, { prepare: true });
-        console.log('user added to db');
+        const query = 'INSERT INTO users (id, data) VALUES (?, ?)';
+        const params = [ id, JSON.stringify({ "avatar": avatar, "starter": starter }) ];
+        await client.execute(query, params, { prepare: true });
+        console.log(`user added to db ${id}`);
     },
 
-    getUser: async function (client, id) {
-        console.log(`querying on id ${id}`);
-        var query = 'SELECT avatar FROM users WHERE user_id=?';
-        const results = await client.execute(query, ["'" + id + "'"]);
-        return results;
+    getUserString: function(id, data) {
+        return ;
     }
 }
