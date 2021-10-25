@@ -1,23 +1,29 @@
 const { embeds } = require('./prompts.js');
 const { buttons } = require('./buttons.js');
 const { MessageAttachment } = require('discord.js');
+const pokeball = new MessageAttachment('./src/data/img/pokeball.png');
+const avatar = new MessageAttachment('./src/data/img/avatar-selection.png');
+const starter = new MessageAttachment('./src/data/img/starter-selection.png');
 
 
 const messages = {
 
     msgWelcome: {
         embeds: [embeds.embedBegin],
-        components: [buttons.rowRegister]
+        components: [buttons.rowRegister],
+        files: [pokeball]
     },
 
     msgSelectAvatar: {
         embeds: [embeds.embedAvatar],
-        components: [buttons.rowSelectAvatar]
+        components: [buttons.rowSelectAvatar],
+        files: [avatar]
     },
 
     msgSelectStarter: {
         embeds: [embeds.embedStarter],
-        components: [buttons.rowSelectStarter]
+        components: [buttons.rowSelectStarter],
+        files: [starter]
     },
 
     msgConfirmRegistration: {

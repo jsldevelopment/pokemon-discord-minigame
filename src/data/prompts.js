@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageAttachment } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const promptBegin = {
     title: "Welcome to the world of\n Pokemon Discord!",
@@ -25,38 +25,86 @@ const promptComplete = {
     desc: "In order to get you registered for our game, we need to you to answer a few basic questions about yourself."
 }
 
-const embedBegin = new MessageEmbed()
-    .setColor('#ffcb05')
-    .setTitle(promptBegin.title)
-    .setDescription(promptBegin.desc)
-    .setURL('https://discord.js.org/')
-    .setThumbnail('https://logos-world.net/wp-content/uploads/2020/12/Discord-Logo.png')
-	.setTimestamp()
-	.setFooter('Tap the title link to visit our website', 'https://www.vhv.rs/dpng/d/424-4249607_poke-ball-png-pokeball-png-transparent-png.png');
-   
-const file = new MessageAttachment('./src/data/img/pokeball.png');
+const embedBegin = {
+	color: 0xffcb05,
+	title: promptBegin.title,
+	url: 'https://discord.js.org',
+	description: promptBegin.desc,
+	thumbnail: {
+		url: 'attachment://pokeball.png',
+	},
+	timestamp: new Date(),
+	footer: {
+		text: "Tap the title bar to visit our website.",
+		icon_url: 'attachment://pokeball.png',
+	},
+};
 
-const embedAvatar = new MessageEmbed()
-    .setColor('#ffcb05')
-    .setTitle(promptAvatar.title)
-    .setDescription(promptAvatar.desc)
-    .setURL('https://discord.js.org/')
-    .setThumbnail('https://logos-world.net/wp-content/uploads/2020/12/Discord-Logo.png')
-	.setTimestamp()
-	.setFooter('Tap the title link to visit our website', 'https://www.vhv.rs/dpng/d/424-4249607_poke-ball-png-pokeball-png-transparent-png.png');
+const embedAvatar = {
+	color: 0xffcb05,
+	title: promptAvatar.title,
+	url: 'https://discord.js.org',
+	description: promptAvatar.desc,
+	thumbnail: {
+		url: 'attachment://pokeball.png',
+	},
+    image: {
+        url: 'attachment://avatar-selection.png'
+    },
+	timestamp: new Date(),
+	footer: {
+		text: "Tap the title bar to visit our website.",
+		icon_url: 'attachment://pokeball.png',
+	},
+};
 
-const embedStarter = new MessageEmbed()
-    .setColor('#ffcb05')
-    .setTitle(promptStarter.title)
-    .setDescription(promptStarter.desc);
+const embedStarter = {
+	color: 0xffcb05,
+	title: promptStarter.title,
+	url: 'https://discord.js.org',
+	description: promptStarter.desc,
+	thumbnail: {
+		url: 'attachment://pokeball.png',
+	},
+    image: {
+        url: 'attachment://starter-selection.png'
+    },
+	timestamp: new Date(),
+	footer: {
+		text: "Tap the title bar to visit our website.",
+		icon_url: 'attachment://pokeball.png',
+	},
+};
     
-const embedRules = new MessageEmbed()
-    .setColor('#ffcb05')
-    .setDescription(promptRules.desc);
+const embedRules = {
+	color: 0xffcb05,
+	title: promptComplete.title,
+	url: 'https://discord.js.org',
+	description: promptComplete.desc,
+	thumbnail: {
+		url: 'attachment://pokeball.png',
+	},
+	timestamp: new Date(),
+	footer: {
+		text: "Tap the title bar to visit our website.",
+		icon_url: 'attachment://pokeball.png',
+	},
+};
 
-const embedConfirm = new MessageEmbed()
-    .setColor('#ffcb05')
-    .setDescription(promptComplete.desc);
+const embedConfirm = {
+	color: 0xffcb05,
+	title: promptComplete.title,
+	url: 'https://discord.js.org',
+	description: promptComplete.desc,
+	thumbnail: {
+		url: 'attachment://pokeball.png',
+	},
+	timestamp: new Date(),
+	footer: {
+		text: "Tap the title bar to visit our website.",
+		icon_url: 'attachment://pokeball.png',
+	},
+};
 
 // create prompt for profile
 const profileEmbed = (profile) => {

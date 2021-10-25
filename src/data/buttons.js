@@ -9,23 +9,51 @@ const buttons = {
     }),
     btnSelectAvatar1: new Button({
         id: 'selectAvatar1',
-        label: 'Avatar 1'
+        label: 'May'
     }),
     btnSelectAvatar2: new Button({
         id: 'selectAvatar2',
-        label: 'Avatar 2'
+        label: 'Brendan'
+    }),
+    btnSelectAvatar3: new Button({
+        id: 'selectAvatar3',
+        label: 'Aqua'
+    }),
+    btnSelectAvatar4: new Button({
+        id: 'selectAvatar4',
+        label: 'Magma'
+    }),
+    btnSelectAvatar5: new Button({
+        id: 'selectAvatar5',
+        label: 'Fighter'
+    }),
+    btnSelectAvatar6: new Button({
+        id: 'selectAvatar6',
+        label: 'Beauty'
+    }),
+    btnSelectAvatar7: new Button({
+        id: 'selectAvatar7',
+        label: 'Scientist'
+    }),
+    btnSelectAvatar8: new Button({
+        id: 'selectAvatar8',
+        label: 'Fisher'
+    }),
+    btnSelectAvatar9: new Button({
+        id: 'selectAvatar9',
+        label: 'Elder'
     }),
     btnSelectStarter1: new Button({
         id: 'selectStarter1',
-        label: 'Starter 1'
+        label: 'Bulbasaur'
     }),
     btnSelectStarter2: new Button({
         id: 'selectStarter2',
-        label: 'Starter 2'
+        label: 'Charmander'
     }),
     btnSelectStarter3: new Button({
         id: 'selectStarter3',
-        label: 'Starter 3'
+        label: 'Squirtle'
     }),
     btnConfirmRegistration: new Button({
         id: 'confirmRegistration',

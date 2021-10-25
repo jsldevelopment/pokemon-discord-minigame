@@ -8,6 +8,7 @@ const messageHandler = {
 
     updateMessage: async function (interaction, message) {
 
+        console.log(interaction);
         await interaction.update(message);
     
     },
@@ -21,7 +22,7 @@ const messageHandler = {
 
     showLoading: async function (interaction) {
 
-        await interaction.update({ content: "Please wait while we gather all the data...", embeds: [], components: [] });
+        await interaction.editReply({ content: "Please wait while we gather all the data...", embeds: [], components: [] });
 
     },
 
@@ -42,10 +43,10 @@ const messageHandler = {
 
     },
 
-    updateMessage: async function (interaction, message) {
+    sendLoadingMessage: async function(member) {
 
-        await interaction.update(message);
-    
+        await member.send({ content: 'Please wait...' });
+
     }
 
 }
