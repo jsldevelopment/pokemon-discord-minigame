@@ -1,8 +1,9 @@
 const messageHandler = require('../handlers/MessageHandler.js');
 const messages = require('../data/messages.js');
 const queries = require('../db/queries.js');
+const generatePokemon = require('../util/generatePokemon.js');
+const { getRole, getMember } = require('../util/getDiscordInfo.js');
 const { default: Collection } = require('@discordjs/collection');
-const uuid = require('uuid').v4;
 
 const bot = {
 
@@ -27,15 +28,19 @@ const bot = {
 
                 if (interaction.commandName === 'profile') {
                     await interaction.deferReply();
-                    const result = await queries.getUser(dbClient, interaction.user.id);
-                    await interaction.editReply({ content: JSON.stringify(result) });
+                    console.log(interaction.user.id);
+                    const result = await queries.getUser(dbClient, { id: interaction.user.id });
+                    const resMessage = await messages.msgShowProfile(result);
+                    await messageHandler.editMessage(interaction, resMessage);
                 }
 
             } else if (interaction.isMessageComponent()) {
                     
                 const user = discordClient.registeringUsers.get(interaction.user.id);
+
                 switch (interaction.customId) {
 
+                    // TODO: clean up and standardize these methods
                     case('beginRegistration'):
                         await messageHandler.updateMessage(interaction, messages.msgSelectAvatar);
                         discordClient.registeringUsers.set(interaction.user.id, { id: interaction.user.id });
@@ -73,8 +78,8 @@ const bot = {
                     case('confirmRegistration'):
                         await messageHandler.showLoading(interaction);
                         await queries.insertUser(dbClient, { id: user.id, avatar: user.avatar, party: user.party });
-                        let member = await getMember(interaction.user.id);
-                        member.roles.add(await getRole("trainer"));
+                        let member = await getMember(discordClient, interaction.user.id);
+                        member.roles.add(await getRole(discordClient, "trainer"));
                         await messageHandler.deleteMessage(interaction, 1);
                         break;
 
@@ -85,52 +90,6 @@ const bot = {
 
         discordClient.login(token);
 
-
-        getGuild = async function() {
-
-            if(!discordClient) return;
-
-            return await discordClient.guilds.cache.get(guild);
-
-        },
-    
-        getMember = async function(id) {
-            
-            if (!discordClient) return;
-            
-            const guild = await getGuild();
-            let member = await guild.members.fetch(id);
-            return member;
-
-        },
-
-        getRole = async function(roleId) {
-
-            if (!discordClient) return;
-
-            const guild = await getGuild();
-            return await guild.roles.cache.find(role => role.name === roleId);
-            
-        },
-
-        generatePokemon = async function(rawPokemon) {
-
-            console.log(`generating new pokemon from ${JSON.stringify(rawPokemon)}`);
-            const newPokemon = {};
-            // every generated pokemon recieves a uuid
-            newPokemon.uuid = uuid();
-            // values taken directly from raw
-            newPokemon.id = rawPokemon.id;
-            newPokemon.name = rawPokemon.name;
-            newPokemon.types = rawPokemon.types;
-            // values generated based on raw
-            newPokemon.gender = Math.floor(Math.random() * 101) < rawPokemon.genderRatio ? 1 : 0;
-            newPokemon.ability =  Math.floor(Math.random() * 101) < rawPokemon.abilities.abilityRatio ? rawPokemon.abilities.ability1 : rawPokemon.abilities.ability2;
-            console.log(JSON.stringify(newPokemon));
-            return newPokemon;
-
-        }
-        
     }
 
 }

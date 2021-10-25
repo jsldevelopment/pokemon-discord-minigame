@@ -14,6 +14,7 @@ const messageHandler = {
 
     editMessage: async function (interaction, message) {
 
+        console.log('editing messsage');
         await interaction.editReply(message);
     
     },
@@ -45,8 +46,8 @@ const messageHandler = {
 
         await interaction.update(message);
     
-    },
-    
+    }
+
 }
 
 module.exports = messageHandler;

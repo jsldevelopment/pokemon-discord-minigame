@@ -1,5 +1,6 @@
 const { embeds } = require('./prompts.js');
 const { buttons } = require('./buttons.js');
+const { MessageAttachment } = require('discord.js');
 
 
 const messages = {
@@ -23,6 +24,12 @@ const messages = {
         embeds: [embeds.embedConfirm],
         components: [buttons.rowConfirmRegistration]
     },
+
+    msgShowProfile: async function(profile) {
+        return {
+            embeds: [embeds.profileEmbed(profile)]
+        }
+    }
 
 }
 

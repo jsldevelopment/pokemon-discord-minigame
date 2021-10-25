@@ -2,3 +2,4 @@ config.json
 tokens.csv
 db-connection.zip
 src/db/tables.txt
+todo.md

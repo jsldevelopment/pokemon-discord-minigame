@@ -7,6 +7,14 @@ module.exports = {
         console.log(`user added to db ${id}`);
     },
 
+    getUser: async function (client, { id }) {
+        console.log(`grabbing user id ${id} from db`);
+        const query = 'SELECT data FROM users WHERE id=?';
+        const params = [ id ];
+        const data = await client.execute(query, params, { prepare: true });
+        return data.rows[0].data;
+    },
+
     insertPokemon: async function (client, { owner_id, pokemon_id, pokemon }) {
         const query = 'INSERT INTO pokemon_owned (owner_id, pokemon_id, pokemon) VALUES (?, ?, ?)';
         const params = [ owner_id, pokemon_id, JSON.stringify(pokemon) ];
