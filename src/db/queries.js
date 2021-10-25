@@ -7,11 +7,11 @@ module.exports = {
         console.log(`user added to db ${id}`);
     },
 
-    insertPokemon: async function (client, { id, avatar, party }) {
-        const query = 'INSERT INTO users (id, data) VALUES (?, ?)';
-        const params = [ id, JSON.stringify({ "avatar": avatar, "party": party }) ];
+    insertPokemon: async function (client, { owner_id, pokemon_id, pokemon }) {
+        const query = 'INSERT INTO pokemon_owned (owner_id, pokemon_id, pokemon) VALUES (?, ?, ?)';
+        const params = [ owner_id, pokemon_id, JSON.stringify(pokemon) ];
         await client.execute(query, params, { prepare: true });
-        console.log(`user added to db ${id}`);
+        console.log(`pokemon added to db ${pokemon.uuid}`);
     },
 
     getRawPokemon: async function (client, { id }) {
