@@ -108,20 +108,50 @@ const embedConfirm = {
 
 // create prompt for profile
 const profileEmbed = (profile) => {
-    return new MessageEmbed()
-        .setColor('#0099ff')
-        .setTitle(`Profile:`)
-        // .setURL('https://discord.js.org/')
-        // .setAuthor('Some name', 'https://i.imgur.com/AfFp7pu.png', 'https://discord.js.org')
-        // .setDescription('Some description here')
-        // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
-        .addFields(
-            { name: 'Info', value: profile.party.uuid }
-        )
-        // .addField('Inline field title', 'Some value here', true)
-        // .setImage('https://i.imgur.com/AfFp7pu.png')
-        // .setTimestamp()
-        // .setFooter('Some footer text here', 'https://i.imgur.com/AfFp7pu.png');
+	console.log(profile);
+	return {
+		color: 0x0099ff,
+		title: `${profile.username}`,
+		url: 'https://discord.js.org',
+		thumbnail: {
+			url: 'attachment://pokeball.png',
+		},
+		fields: [
+			{
+				name: "Captured: ",
+				value: profile.pkmnCaught.toString()
+			},
+			{
+				name: "Seen: ",
+				value: profile.pkmnSeen.toString()
+			},
+			{
+				name: "Badges: ",
+				value: profile.badges.toString()
+			},
+			{
+				name: "Money: ",
+				value: profile.money.toString()
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			text: "Tap the title bar to visit our website.",
+			icon_url: 'attachment://pokeball.png',
+		}
+	}
+}
+
+// this will be used to check team
+const teamEmbed = (profile) => {
+	let fieldsGenerated = [];
+	profile.party.forEach((pkmn) => {
+		console.log(pkmn.name);
+		fieldsGenerated = [...fieldsGenerated, {
+			name: pkmn.name,
+			value: `Level: 10\nGender: ${pkmn.gender ? 'Male' : 'Female'}\nAbility: ${pkmn.ability.name}`
+		}]
+	});
 }
 
 module.exports = {

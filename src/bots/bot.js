@@ -5,7 +5,6 @@ const generatePokemon = require('../util/generatePokemon.js');
 const rawPokemon = require('../db/models/pokemon-raw.js');
 const { getRole, getMember } = require('../util/getDiscordInfo.js');
 const { default: Collection } = require('@discordjs/collection');
-const { stringify } = require('uuid');
 
 const bot = {
 
@@ -40,21 +39,25 @@ const bot = {
             } else if (interaction.isMessageComponent()) {
                     
                 const memObj = await getMember(discordClient, userId);
+                user = memObj.user;
                 const userObj = discordClient.registeringUsers.get(userId);
                 const label = interaction.customId;
 
                 // TODO: clean up and standardize these methods
                 if (label === 'beginRegistration'){
+
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendDirectMessage(memObj, messages.msgSelectAvatar);
                     discordClient.registeringUsers.set(userId, { id: userId });
-                }
-                if (label.match(/selectAvatar[1-9]*/)) {
+
+                } else if (label.match(/selectAvatar[1-9]*/)) {
+
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendDirectMessage(memObj, messages.msgSelectStarter);
                     discordClient.registeringUsers.set(userId, { ...userObj, avatar: label.charAt(label.length-1) });
-                }
-                if (label.match(/selectStarter[1-9]*/)) {
+
+                } else if (label.match(/selectStarter[1-9]*/)) {
+
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendLoadingMessage(memObj);
                     let starter = rawPokemon[label.charAt(label.length-1)];
@@ -63,13 +66,26 @@ const bot = {
                     discordClient.registeringUsers.set(userId, { ...userObj, party: starter1gen });
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendDirectMessage(memObj, messages.msgConfirmRegistration);
-                }
-                if (label === 'confirmRegistration') {
+                    
+                } else if (label === 'confirmRegistration') {
+
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendLoadingMessage(memObj);
-                    await queries.insertUser(dbClient, { id: userObj.id, avatar: userObj.avatar, party: userObj.party });
+                    await queries.insertUser(dbClient,
+                        userObj.id, 
+                        {
+                            "username": memObj.user.username,
+                            "avatar": userObj.avatar,
+                            "pkmnCaught": 1,
+                            "pkmnSeen": 1,
+                            "badges": 0,
+                            "money": 5000,
+                            "party": [userObj.party]
+                        }
+                    );
                     memObj.roles.add(await getRole(discordClient, "trainer"));
                     await messageHandler.deleteMessage(interaction, 1);
+
                 }
             }
 

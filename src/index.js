@@ -11,4 +11,5 @@ const dbClient = new cassandra.Client({
     keyspace: 'pokemonapp'
 });
 
+// start bot 1
 bot.start(discordClient, dbClient, token, guildId);

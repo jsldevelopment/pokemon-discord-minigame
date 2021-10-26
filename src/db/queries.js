@@ -1,9 +1,13 @@
 module.exports = {
 
-    insertUser: async function (client, { id, avatar, party }) {
+    insertUser: async function (client, id, data) {
+        console.log(`inserting ${JSON.stringify(data)} for user ${id}`);
         const query = 'INSERT INTO users (id, data) VALUES (?, ?)';
-        const params = [ id, JSON.stringify({ "avatar": avatar, "party": [party] }) ];
-        await client.execute(query, params, { prepare: true });
+        const params = [ parseInt(id), JSON.stringify(data) ];
+        await client.execute(query, params, { prepare: true })
+            .then(() => {
+                console.log("success");
+            });
     },
 
     getUser: async function (client, { id }) {
