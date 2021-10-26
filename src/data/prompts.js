@@ -108,7 +108,6 @@ const embedConfirm = {
 
 // create prompt for profile
 const profileEmbed = (profile) => {
-	console.log(profile);
     return new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`Profile:`)

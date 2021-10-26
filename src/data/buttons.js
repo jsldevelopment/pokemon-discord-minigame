@@ -48,11 +48,11 @@ const buttons = {
         label: 'Bulbasaur'
     }),
     btnSelectStarter2: new Button({
-        id: 'selectStarter2',
+        id: 'selectStarter4',
         label: 'Charmander'
     }),
     btnSelectStarter3: new Button({
-        id: 'selectStarter3',
+        id: 'selectStarter7',
         label: 'Squirtle'
     }),
     btnConfirmRegistration: new Button({

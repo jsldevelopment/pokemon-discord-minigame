@@ -8,14 +8,12 @@ const messageHandler = {
 
     updateMessage: async function (interaction, message) {
 
-        console.log(interaction);
         await interaction.update(message);
     
     },
 
     editMessage: async function (interaction, message) {
 
-        console.log('editing messsage');
         await interaction.editReply(message);
     
     },

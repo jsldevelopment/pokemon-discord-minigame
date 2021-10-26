@@ -11,8 +11,6 @@ const rest = new REST({ version: '9' }).setToken(token);
 for (const file of commandFiles) {
 	const command = require(`./src/commands/${file}`);
 	commands.push(command.data.toJSON());
-	console.log(command);
-}
 
 (async () => {
 	try {
