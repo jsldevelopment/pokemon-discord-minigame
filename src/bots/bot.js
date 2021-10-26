@@ -2,6 +2,7 @@ const messageHandler = require('../handlers/MessageHandler.js');
 const messages = require('../data/messages.js');
 const queries = require('../db/queries.js');
 const generatePokemon = require('../util/generatePokemon.js');
+const rawPokemon = require('../db/models/pokemon-raw.js');
 const { getRole, getMember } = require('../util/getDiscordInfo.js');
 const { default: Collection } = require('@discordjs/collection');
 
@@ -62,9 +63,9 @@ const bot = {
                     case('selectStarter1'):
                         await messageHandler.deleteMessage(interaction, 1);
                         await messageHandler.sendLoadingMessage(memObj);
-                        let starter1 = await queries.getRawPokemon(dbClient, { id: 1 });
-                        let starter1gen = await generatePokemon(JSON.parse(starter1));
-                        queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter1gen.uuid, pokemon: starter1gen });
+                        let starter1 = rawPokemon[1];
+                        let starter1gen = await generatePokemon(starter1);
+                        queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter1gen.uuid, pokemon: [starter1gen] });
                         discordClient.registeringUsers.set(userId, { ...userObj, party: starter1gen });
                         await messageHandler.deleteMessage(interaction, 1);
                         await messageHandler.sendDirectMessage(memObj, messages.msgConfirmRegistration);
@@ -72,9 +73,9 @@ const bot = {
                     case('selectStarter2'):
                         await messageHandler.deleteMessage(interaction, 1);
                         await messageHandler.sendLoadingMessage(memObj);
-                        let starter2 = await queries.getRawPokemon(dbClient, { id: 4 });
-                        let starter2gen = await generatePokemon(JSON.parse(starter2));
-                        queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter1gen.uuid, pokemon: starter1gen });
+                        let starter2 = rawPokemon[4];
+                        let starter2gen = await generatePokemon(starter2);
+                        queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter2gen.uuid, pokemon: [starter2gen] });
                         discordClient.registeringUsers.set(userId, { ...userObj, party: starter2gen });
                         await messageHandler.deleteMessage(interaction, 1);
                         await messageHandler.sendDirectMessage(memObj, messages.msgConfirmRegistration);
@@ -82,9 +83,9 @@ const bot = {
                     case('selectStarter3'):
                         await messageHandler.deleteMessage(interaction, 1);
                         await messageHandler.sendLoadingMessage(memObj);
-                        let starter3 = await queries.getRawPokemon(dbClient, { id: 7 });
-                        let starter3gen = await generatePokemon(JSON.parse(starter3));
-                        queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter1gen.uuid, pokemon: starter1gen });
+                        let starter3 = rawPokemon[7];
+                        let starter3gen = await generatePokemon(starter3);
+                        queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter3gen.uuid, pokemon: [starter3gen] });
                         discordClient.registeringUsers.set(userId, { ...userObj, party: starter3gen });
                         await messageHandler.deleteMessage(interaction, 1);
                         await messageHandler.sendDirectMessage(memObj, messages.msgConfirmRegistration);

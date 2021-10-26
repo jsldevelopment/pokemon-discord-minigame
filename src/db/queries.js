@@ -12,7 +12,7 @@ module.exports = {
         const query = 'SELECT data FROM users WHERE id=?';
         const params = [ id ];
         const data = await client.execute(query, params, { prepare: true });
-        return data.rows[0].data;
+        return JSON.parse(data.rows[0].data);
     },
 
     insertPokemon: async function (client, { owner_id, pokemon_id, pokemon }) {

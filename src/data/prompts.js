@@ -108,6 +108,7 @@ const embedConfirm = {
 
 // create prompt for profile
 const profileEmbed = (profile) => {
+	console.log(profile);
     return new MessageEmbed()
         .setColor('#0099ff')
         .setTitle(`Profile:`)
@@ -116,7 +117,7 @@ const profileEmbed = (profile) => {
         // .setDescription('Some description here')
         // .setThumbnail('https://i.imgur.com/AfFp7pu.png')
         .addFields(
-            { name: 'Info', value: profile }
+            { name: 'Info', value: profile.party.uuid }
         )
         // .addField('Inline field title', 'Some value here', true)
         // .setImage('https://i.imgur.com/AfFp7pu.png')

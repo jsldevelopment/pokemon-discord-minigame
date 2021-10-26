@@ -1,5 +1,5 @@
-{
-    {
+module.exports = {
+    "1": {
         "id": 1,
         "name": "Bulbasaur",
         "types": {
@@ -15,7 +15,7 @@
             "abilitySecret": "chlorophyll" 
         }
     },
-    {
+    "4": {
         "id": 4,
         "name": "Charmander",
         "types": {
@@ -30,7 +30,7 @@
             "abilitySecret": "solar power" 
         }
     },
-    {
+    "7": {
         "id": 7,
         "name": "Squirtle",
         "types": {
