@@ -10,10 +10,16 @@ const bot = {
 
     start: function(discordClient, dbClient, token, guild) {
 
-        discordClient.registeringUsers = new Collection();
+        discordClient.activeUsers = new Collection();
+        const userMap = discordClient.activeUsers;
 
-        discordClient.once('ready', () => {
-            console.log('ready');
+        discordClient.once('ready', async () => {
+            const users = await queries.getAllUsers(dbClient);
+            // add each user to our map
+            users.rows.forEach((row) => {
+                userMap.set(row.id, row.data);
+            })
+            console.log(`ready with ${userMap.size} users ready to play`);
         });
 
         discordClient.on('guildMemberAdd', async member => {
@@ -40,7 +46,7 @@ const bot = {
                     
                 const memObj = await getMember(discordClient, userId);
                 user = memObj.user;
-                const userObj = discordClient.registeringUsers.get(userId);
+                const userObj = userMap.get(userId);
                 const label = interaction.customId;
 
                 // TODO: clean up and standardize these methods
@@ -48,13 +54,13 @@ const bot = {
 
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendDirectMessage(memObj, messages.msgSelectAvatar);
-                    discordClient.registeringUsers.set(userId, { id: userId });
+                    userMap.set(userId, { id: userId });
 
                 } else if (label.match(/selectAvatar[1-9]*/)) {
 
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendDirectMessage(memObj, messages.msgSelectStarter);
-                    discordClient.registeringUsers.set(userId, { ...userObj, avatar: label.charAt(label.length-1) });
+                    userMap.set(userId, { ...userObj, avatar: label.charAt(label.length-1) });
 
                 } else if (label.match(/selectStarter[1-9]*/)) {
 
@@ -63,7 +69,7 @@ const bot = {
                     let starter = rawPokemon[label.charAt(label.length-1)];
                     let starter1gen = await generatePokemon(starter);
                     queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter1gen.uuid, pokemon: starter1gen });
-                    discordClient.registeringUsers.set(userId, { ...userObj, party: starter1gen });
+                    userMap.set(userId, { ...userObj, party: starter1gen });
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendDirectMessage(memObj, messages.msgConfirmRegistration);
                     
@@ -72,7 +78,7 @@ const bot = {
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendLoadingMessage(memObj);
                     await queries.insertUser(dbClient,
-                        userObj.id, 
+                        interaction.user.id,
                         {
                             "username": memObj.user.username,
                             "avatar": userObj.avatar,

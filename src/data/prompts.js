@@ -108,7 +108,6 @@ const embedConfirm = {
 
 // create prompt for profile
 const profileEmbed = (profile) => {
-	console.log(profile);
 	return {
 		color: 0x0099ff,
 		title: `${profile.username}`,

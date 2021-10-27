@@ -6,9 +6,9 @@ const bot = require('./bots/bot.js');
 // instantiate client and intents
 const discordClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
 const dbClient = new cassandra.Client({
-    cloud: { secureConnectBundle: './db-connection.zip' },
+    cloud: { secureConnectBundle: './secure-connect-pokemon.zip' },
     credentials: { username: dbId, password: dbSecret},
-    keyspace: 'pokemonapp'
+    keyspace: 'data'
 });
 
 // start bot 1
