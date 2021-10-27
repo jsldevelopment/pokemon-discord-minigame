@@ -13,36 +13,22 @@ module.exports = {
             },
             "abilityRatio": 100,
             "abilitySecret": "chlorophyll" 
-        }
-    },
-    "4": {
-        "id": 4,
-        "name": "Charmander",
-        "types": {
-            "type1": "fire"
         },
-        "genderRatio": 88,
-        "abilities": {
-            "ability1": {
-                "name": "blaze"
-            },
-            "abilityRatio": 100,
-            "abilitySecret": "solar power" 
-        }
-    },
-    "7": {
-        "id": 7,
-        "name": "Squirtle",
-        "types": {
-            "type1": "water"
+        "evolves": 16,
+        "base": {
+            "hp": 45,
+            "atk": 49,
+            "def": 49,
+            "spatk": 65,
+            "spdef": 65,
+            "spd": 45
         },
-        "genderRatio": 88,
-        "abilities": {
-            "ability1": {
-                "name": "torrent"
-            },
-            "abilityRatio": 100,
-            "abilitySecret": "rain dish" 
-        }
+        "moves": {
+            1: "tackle",
+            2: "growl",
+            3: null,
+            4: null
+        },
+        "learned": {}
     }
 }

@@ -19,6 +19,7 @@ const bot = {
             users.rows.forEach((row) => {
                 userMap.set(row.id, row.data);
             })
+            console.log(userMap);
             console.log(`ready with ${userMap.size} users ready to play`);
         });
 
@@ -32,6 +33,9 @@ const bot = {
         discordClient.on('interactionCreate', async interaction => {
 
             const userId = interaction.user.id;
+            console.log(userId);
+            const currentUser = userMap.get(userId);
+            console.log(currentUser);
 
             if (interaction.isCommand()) {
 
@@ -40,6 +44,31 @@ const bot = {
                     const result = await queries.getUser(dbClient, { id: interaction.user.id });
                     const resMessage = await messages.msgShowProfile(result);
                     await messageHandler.editMessage(interaction, resMessage);
+                }
+
+                // get member of team based on number 1-6
+                if (interaction.commandName === 'team') {
+                   const member = interaction.options.getSubcommand();
+                   switch(member){
+                        case('1'):
+                            console.log(`pokemon 1: \n ${currentUser}`);
+                            break;
+                        case('2'):
+                            console.log('yo');
+                            break;
+                        case('3'):
+                            console.log('yo');
+                            break;
+                        case('4'):
+                            console.log('yo');
+                            break;
+                        case('5'):
+                            console.log('yo');
+                            break;
+                        case('6'):
+                            console.log('yo');
+                            break;
+                   }
                 }
 
             } else if (interaction.isMessageComponent()) {

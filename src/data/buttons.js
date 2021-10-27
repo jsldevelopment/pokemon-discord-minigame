@@ -66,7 +66,7 @@ const buttonRows = {
 
     rowRegister:            new MessageActionRow().addComponents( buttons.btnBeginRegistration.button ),
     rowSelectAvatar:        new MessageActionRow().addComponents( buttons.btnSelectAvatar1.button, buttons.btnSelectAvatar2.button ),
-    rowSelectStarter:       new MessageActionRow().addComponents( buttons.btnSelectStarter1.button, buttons.btnSelectStarter2.button, buttons.btnSelectStarter3.button ),
+    rowSelectStarter:       new MessageActionRow().addComponents( buttons.btnSelectStarter1.button ),
     rowConfirmRegistration: new MessageActionRow().addComponents( buttons.btnConfirmRegistration.button )
     
 }
