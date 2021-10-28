@@ -4,23 +4,15 @@ const queries = require('../db/queries.js');
 const generatePokemon = require('../util/generatePokemon.js');
 const rawPokemon = require('../db/models/pokemon-raw.js');
 const { getRole, getMember } = require('../util/getDiscordInfo.js');
-const { default: Collection } = require('@discordjs/collection');
+const userMap = require('../objects/userMap.js');
 
 const profBot = {
 
     start: function(discordClient, dbClient, token, guild) {
 
-        discordClient.activeUsers = new Collection();
-        const userMap = discordClient.activeUsers;
 
         discordClient.once('ready', async () => {
-            // const users = await queries.getAllUsers(dbClient);
-            // // add each user to our map
-            // users.rows.forEach((row) => {
-            //     userMap.set(row.id, JSON.parse(row.data));
-            //     console.log(JSON.parse(row.data));
-            // })
-            console.log(`profBot: ready`);
+            console.log(`profBot: ready to serve ${userMap.size} users`);
         });
 
         discordClient.on('guildMemberAdd', async member => {

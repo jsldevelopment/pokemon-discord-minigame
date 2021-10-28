@@ -1,19 +1,26 @@
+const userMap = require('../objects/userMap.js');
+
 const catchBot = {
 
     start: function(discordClient, dbClient, token, guild) {
 
-        // discordClient.activeUsers = new Collection();
-        // const userMap = discordClient.activeUsers;
-
         discordClient.once('ready', async () => {
-            // const users = await queries.getAllUsers(dbClient);
-            // // add each user to our map
-            // users.rows.forEach((row) => {
-            //     userMap.set(row.id, JSON.parse(row.data));
-            //     console.log(JSON.parse(row.data));
-            // })
-            console.log(`catchBot: ready`);
+            console.log(`catchBot: ready to serve ${userMap.size} users`);
         });
+
+        discordClient.on('interactionCreate', async interaction => {
+
+            if (interaction.isCommand()) {
+
+                if (interaction.commandName === 'profile') {
+                    await interaction.deferReply();
+                    const result = await queries.getUser(dbClient, { id: interaction.user.id });
+                    const resMessage = await messages.msgShowProfile(result);
+                    await messageHandler.editMessage(interaction, resMessage);
+                }
+            }
+        });
+
 
         discordClient.login(token);
 

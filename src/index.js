@@ -3,18 +3,30 @@ const cassandra = require('cassandra-driver');
 const { profToken, catchToken, dbId, dbSecret, guildId } = require('../config.json');
 const profBot = require('./bots/profBot.js');
 const catchBot = require('./bots/catchBot.js');
+const queries = require('./db/queries.js');
+const userMap = require('./objects/userMap.js');
 
-// instantiate client and intents
-const profClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
-const catchClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
 const dbClient = new cassandra.Client({
     cloud: { secureConnectBundle: './secure-connect-pokemon.zip' },
     credentials: { username: dbId, password: dbSecret},
     keyspace: 'data'
 });
 
-// start prof bot
-profBot.start(profClient, dbClient, profToken, guildId);
+(async () => {
 
-// start catch bot
-catchBot.start(catchClient, dbClient, catchToken, guildId);
+    // grab all users from db
+    const users = await queries.getAllUsers(dbClient);
+    // add each user to our map
+    users.rows.forEach((row) => {
+        userMap.set(row.id, JSON.parse(row.data));
+    })
+    
+    // instantiate client and intents
+    const profClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
+    const catchClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
+    
+    // start bots
+    profBot.start(profClient, dbClient, profToken, guildId);
+    catchBot.start(catchClient, dbClient, catchToken, guildId);
+    
+})();
