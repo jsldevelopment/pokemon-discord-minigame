@@ -30,3 +30,4 @@ const dbClient = new cassandra.Client({
     catchBot.start(catchClient, dbClient, catchToken, guildId);
     
 })();
+

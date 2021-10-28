@@ -170,6 +170,35 @@ const pokemonEmbed = (pokemon) => {
 	}
 }
 
+// create prompt for pokemon
+const battleStartEmbed = (pokemon) => {
+	return {
+		color: 0x0099ff,
+		title: `${pokemon.name}`,
+		thumbnail: {
+			url: 'attachment://pokeball.png',
+		},
+		fields: [
+			{
+				name: "Ability: ",
+				value: pokemon.ability.name
+			},
+			{
+				name: "Gender: ",
+				value: pokemon.gender ? "Male" : "Female"
+			},
+			{
+				name: "Nature: ",
+				value: pokemon.nature
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			icon_url: 'attachment://pokeball.png',
+		}
+	}
+}
+
 module.exports = {
     embeds: {
         embedBegin,
@@ -178,7 +207,8 @@ module.exports = {
         embedRules,
         embedConfirm,
         profileEmbed,
-		pokemonEmbed
+		pokemonEmbed,
+		battleStartEmbed
     }
 };
 

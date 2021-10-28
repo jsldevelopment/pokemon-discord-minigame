@@ -58,6 +58,18 @@ const buttons = {
     btnConfirmRegistration: new Button({
         id: 'confirmRegistration',
         label: 'Confirm'
+    }),
+    btnAttack: new Button({
+        id: 'attackPokemon',
+        label: 'Attack'
+    }),
+    btnSwap: new Button({
+        id: 'swapPokemon',
+        label: 'Swap'
+    }),
+    btnCatch: new Button({
+        id: 'catchPokemon',
+        label: 'Catch'
     })
 
 }
@@ -67,7 +79,8 @@ const buttonRows = {
     rowRegister:            new MessageActionRow().addComponents( buttons.btnBeginRegistration.button ),
     rowSelectAvatar:        new MessageActionRow().addComponents( buttons.btnSelectAvatar1.button, buttons.btnSelectAvatar2.button ),
     rowSelectStarter:       new MessageActionRow().addComponents( buttons.btnSelectStarter1.button ),
-    rowConfirmRegistration: new MessageActionRow().addComponents( buttons.btnConfirmRegistration.button )
+    rowConfirmRegistration: new MessageActionRow().addComponents( buttons.btnConfirmRegistration.button ),
+    rowBattle:              new MessageActionRow().addComponents( buttons.btnAttack.button, buttons.btnSwap.button, buttons.btnCatch.button )
     
 }
 

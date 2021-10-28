@@ -2,6 +2,6 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('get')
-        .setDescription('dummy command for checking usermap values')
+        .setName('search')
+        .setDescription('search for wild pokemon in the area')
 }

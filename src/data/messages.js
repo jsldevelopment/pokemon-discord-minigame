@@ -43,6 +43,15 @@ const messages = {
         return {
             embeds: embed
         }
+    },
+
+    msgStartBattle: async function(pokemon) {
+        const embed = [embeds.battleStartEmbed(pokemon)];
+        console.log(embed);
+        return {
+            embeds: embed,
+            components: [buttons.rowBattle]
+        }
     }
 
 }
