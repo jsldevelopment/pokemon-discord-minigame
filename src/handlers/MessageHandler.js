@@ -6,6 +6,12 @@ const messageHandler = {
 
     },
 
+    replyEphemeralMessage: async function(interaction, message) {
+
+        await interaction.reply({ ...message, ephemeral: true });
+
+    },
+
     updateMessage: async function (interaction, message) {
 
         await interaction.update(message);

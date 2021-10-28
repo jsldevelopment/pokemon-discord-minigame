@@ -6,7 +6,7 @@ module.exports = {
 
     insertUser: async function (client, id, data) {
         const query = 'INSERT INTO members (id, data) VALUES (?, ?)';
-        const params = [ parseInt(id), JSON.stringify(data) ];
+        const params = [ id, JSON.stringify(data) ];
         await client.execute(query, params, { prepare: true })
             .then(() => {
                 console.log("success");

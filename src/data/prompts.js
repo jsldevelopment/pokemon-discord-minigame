@@ -141,16 +141,33 @@ const profileEmbed = (profile) => {
 	}
 }
 
-// this will be used to check team
-const teamEmbed = (profile) => {
-	let fieldsGenerated = [];
-	profile.party.forEach((pkmn) => {
-		console.log(pkmn.name);
-		fieldsGenerated = [...fieldsGenerated, {
-			name: pkmn.name,
-			value: `Level: 10\nGender: ${pkmn.gender ? 'Male' : 'Female'}\nAbility: ${pkmn.ability.name}`
-		}]
-	});
+// create prompt for pokemon
+const pokemonEmbed = (pokemon) => {
+	return {
+		color: 0x0099ff,
+		title: `${pokemon.name}`,
+		thumbnail: {
+			url: 'attachment://pokeball.png',
+		},
+		fields: [
+			{
+				name: "Ability: ",
+				value: pokemon.ability.name
+			},
+			{
+				name: "Gender: ",
+				value: pokemon.gender ? "Male" : "Female"
+			},
+			{
+				name: "Nature: ",
+				value: pokemon.nature
+			}
+		],
+		timestamp: new Date(),
+		footer: {
+			icon_url: 'attachment://pokeball.png',
+		}
+	}
 }
 
 module.exports = {
@@ -160,7 +177,8 @@ module.exports = {
         embedStarter,
         embedRules,
         embedConfirm,
-        profileEmbed
+        profileEmbed,
+		pokemonEmbed
     }
 };
 

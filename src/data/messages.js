@@ -35,6 +35,14 @@ const messages = {
         return {
             embeds: [embeds.profileEmbed(profile)]
         }
+    },
+
+    msgShowPokemon: async function(pokemon) {
+        const embed = [embeds.pokemonEmbed(pokemon)];
+        console.log(embed);
+        return {
+            embeds: embed
+        }
     }
 
 }

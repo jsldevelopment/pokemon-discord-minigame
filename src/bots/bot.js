@@ -17,9 +17,9 @@ const bot = {
             const users = await queries.getAllUsers(dbClient);
             // add each user to our map
             users.rows.forEach((row) => {
-                userMap.set(row.id, row.data);
+                userMap.set(row.id, JSON.parse(row.data));
+                console.log(JSON.parse(row.data));
             })
-            console.log(userMap);
             console.log(`ready with ${userMap.size} users ready to play`);
         });
 
@@ -33,9 +33,7 @@ const bot = {
         discordClient.on('interactionCreate', async interaction => {
 
             const userId = interaction.user.id;
-            console.log(userId);
             const currentUser = userMap.get(userId);
-            console.log(currentUser);
 
             if (interaction.isCommand()) {
 
@@ -47,11 +45,14 @@ const bot = {
                 }
 
                 // get member of team based on number 1-6
+                // TODO: build prompts to display indiividual team members
                 if (interaction.commandName === 'team') {
                    const member = interaction.options.getSubcommand();
                    switch(member){
                         case('1'):
-                            console.log(`pokemon 1: \n ${currentUser}`);
+                            console.log(`pokemon 1: \n ${JSON.stringify(currentUser.party[0].name)}`);
+                            const resMessage = await messages.msgShowPokemon(currentUser.party[0]);
+                            messageHandler.replyEphemeralMessage(interaction, resMessage);
                             break;
                         case('2'):
                             console.log('yo');
@@ -109,13 +110,13 @@ const bot = {
                     await queries.insertUser(dbClient,
                         interaction.user.id,
                         {
-                            "username": memObj.user.username,
-                            "avatar": userObj.avatar,
-                            "pkmnCaught": 1,
-                            "pkmnSeen": 1,
-                            "badges": 0,
-                            "money": 5000,
-                            "party": [userObj.party]
+                            username: memObj.user.username,
+                            avatar: userObj.avatar,
+                            pkmnCaught: 1,
+                            pkmnSeen: 1,
+                            badges: 0,
+                            money: 5000,
+                            party: [userObj.party]
                         }
                     );
                     memObj.roles.add(await getRole(discordClient, "trainer"));
