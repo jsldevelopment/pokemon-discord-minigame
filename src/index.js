@@ -16,10 +16,11 @@ const dbClient = new cassandra.Client({
 
     // grab all users from db
     const users = await queries.getAllUsers(dbClient);
+
     // add each user to our map
     users.rows.forEach((row) => {
         userMap.set(row.id, JSON.parse(row.data));
-    })
+    });
     
     // instantiate client and intents
     const profClient = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MEMBERS] });
