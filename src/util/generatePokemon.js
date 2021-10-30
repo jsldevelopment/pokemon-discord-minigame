@@ -5,10 +5,12 @@ module.exports = async function(rawPokemon) {
     const newPokemon = {};
     // every generated pokemon recieves a uuid
     newPokemon.uuid = uuid();
+    newPokemon.captured = Date.now();
     // values taken directly from raw
     newPokemon.id = rawPokemon.id;
     newPokemon.name = rawPokemon.name;
     newPokemon.types = rawPokemon.types;
+    newPokemon.level = 5;
     newPokemon.evolves = rawPokemon.evolves;
     newPokemon.base = rawPokemon.base;
     // values generated based on raw

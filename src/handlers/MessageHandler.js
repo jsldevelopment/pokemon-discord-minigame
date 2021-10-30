@@ -8,7 +8,7 @@ const messageHandler = {
 
     replyEphemeralMessage: async function(interaction, message) {
 
-        await interaction.reply({ ...message, ephemeral: true });
+        return await interaction.reply({ ...message, ephemeral: true });
 
     },
 

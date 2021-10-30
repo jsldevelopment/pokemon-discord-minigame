@@ -1,8 +1,8 @@
 const messageHandler = require('../handlers/MessageHandler.js');
-const messages = require('../data/messages.js');
+const messages = require('../data/messages/messages.js');
 const queries = require('../db/queries.js');
 const generatePokemon = require('../util/generatePokemon.js');
-const rawPokemon = require('../db/models/pokemon-raw.js');
+const rawPokemon = require('../data/models/pokemon-raw.js');
 const { getRole, getMember } = require('../util/getDiscordInfo.js');
 const userMap = require('../objects/userMap.js');
 
@@ -24,14 +24,16 @@ const profBot = {
 
         discordClient.on('interactionCreate', async interaction => {
 
+            // grab the user id and perform lookup on map for every interaction
             const userId = interaction.user.id;
             const currentUser = userMap.get(userId);
 
             if (interaction.isCommand()) {
 
+                // TODO: make profile page look good (missing data)
                 if (interaction.commandName === 'profile') {
                     await interaction.deferReply();
-                    const result = await queries.getUser(dbClient, { id: interaction.user.id });
+                    const result = await queries.getUser(dbClient, { id: userId });
                     const resMessage = await messages.msgShowProfile(result);
                     await messageHandler.editMessage(interaction, resMessage);
                 }
@@ -42,7 +44,6 @@ const profBot = {
                    const member = interaction.options.getSubcommand();
                    switch(member){
                         case('1'):
-                            console.log(`pokemon 1: \n ${JSON.stringify(currentUser.party[0].name)}`);
                             const resMessage = await messages.msgShowPokemon(currentUser.party[0]);
                             messageHandler.replyEphemeralMessage(interaction, resMessage);
                             break;
@@ -99,18 +100,22 @@ const profBot = {
 
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendLoadingMessage(memObj);
-                    await queries.insertUser(dbClient,
-                        interaction.user.id,
-                        {
-                            username: memObj.user.username,
-                            avatar: userObj.avatar,
-                            pkmnCaught: 1,
-                            pkmnSeen: 1,
-                            badges: 0,
-                            money: 5000,
-                            party: [userObj.party]
-                        }
-                    );
+                    const finalUser = 
+                    {
+                        id: interaction.user.id,
+                        username: memObj.user.username,
+                        avatar: userObj.avatar,
+                        pkmnCaught: 1,
+                        pkmnSeen: 1,
+                        badges: 0,
+                        money: 5000,
+                        party: [userObj.party],
+                        isInBattle: false,
+                        battling: {}
+                    };
+                    console.log(finalUser);
+                    await queries.insertUser(dbClient, interaction.user.id, finalUser);
+                    userMap.set(userId, finalUser);
                     memObj.roles.add(await getRole(discordClient, "trainer"));
                     await messageHandler.deleteMessage(interaction, 1);
 
