@@ -170,32 +170,32 @@ const pokemonEmbed = (pokemon) => {
 			},
 			{
 				name: "HP:",
-				value: pokemon.base.hp.toString(),
+				value: pokemon.stats.hp.toString(),
 				inline: true
 			},
 			{
 				name: "Attack: ",
-				value: pokemon.base.atk.toString(),
+				value: pokemon.stats.atk.toString(),
 				inline: true
 			},
 			{
 				name: "Defense: ",
-				value: pokemon.base.def.toString(),
+				value: pokemon.stats.def.toString(),
 				inline: true
 			},
 			{
 				name: "Sp. Attack: ",
-				value: pokemon.base.spatk.toString(),
+				value: pokemon.stats.spatk.toString(),
 				inline: true
 			},
 			{
 				name: "Sp. Defense: ",
-				value: pokemon.base.spdef.toString(),
+				value: pokemon.stats.spdef.toString(),
 				inline: true
 			},
 			{
 				name: "Speed: ",
-				value: pokemon.base.spd.toString(),
+				value: pokemon.stats.spd.toString(),
 				inline: true
 			}
 		],

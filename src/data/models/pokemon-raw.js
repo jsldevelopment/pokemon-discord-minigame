@@ -13,7 +13,7 @@ module.exports = {
         },
         "evolves": 16,
         "base": {
-            "hp": 45,
+            hp: 45,
             "atk": 49,
             "def": 49,
             "spatk": 65,

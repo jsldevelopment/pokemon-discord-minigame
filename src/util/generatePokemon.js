@@ -1,5 +1,5 @@
 const uuid = require('uuid').v4;
-module.exports = async function(rawPokemon) {
+module.exports = async function(rawPokemon, level) {
 
     // declare empty new pokemon
     const newPokemon = {};
@@ -10,8 +10,9 @@ module.exports = async function(rawPokemon) {
     newPokemon.id = rawPokemon.id;
     newPokemon.name = rawPokemon.name;
     newPokemon.types = rawPokemon.types;
-    newPokemon.level = 5;
+    newPokemon.level = level;
     newPokemon.evolves = rawPokemon.evolves;
+    // get base stats
     newPokemon.base = rawPokemon.base;
     // values generated based on raw
     newPokemon.gender = Math.floor(Math.random() * 101) < rawPokemon.genderRatio ? 1 : 0;
@@ -26,19 +27,24 @@ module.exports = async function(rawPokemon) {
         "spatk": Math.floor(Math.random() * 32),
         "spdef": Math.floor(Math.random() * 32),
         "spd": Math.floor(Math.random() * 32)
-    }
+    },
+    newPokemon.evs = {
+        "hp": 0,
+        "atk": 0,
+        "def": 0,
+        "spatk": 0,
+        "spdef": 0,
+        "spd": 0
+    },
+    newPokemon.stats = {};
     // get starting moves
     newPokemon.moves = rawPokemon.moves;
     newPokemon.learned = rawPokemon.learned;
-
+    
     return newPokemon;
 
 }
 
 const natures = [
-    "hardy",
-    "lonely",
-    "brave",
-    "adamant",
-    "naughty"
+    "lonely"
 ];

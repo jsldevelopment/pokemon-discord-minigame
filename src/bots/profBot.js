@@ -2,6 +2,7 @@ const messageHandler = require('../handlers/MessageHandler.js');
 const messages = require('../data/messages/messages.js');
 const queries = require('../db/queries.js');
 const generatePokemon = require('../util/generatePokemon.js');
+const calcStat = require('../util/calculateStat.js');
 const rawPokemon = require('../data/models/pokemon-raw.js');
 const { getRole, getMember } = require('../util/getDiscordInfo.js');
 const userMap = require('../objects/userMap.js');
@@ -90,7 +91,16 @@ const profBot = {
                     await messageHandler.deleteMessage(interaction, 1);
                     await messageHandler.sendLoadingMessage(memObj);
                     let starter = rawPokemon[label.charAt(label.length-1)];
-                    let starter1gen = await generatePokemon(starter);
+                    let starter1gen = await generatePokemon(starter, 50);
+                    // set starting stats
+                    starter1gen.stats = {
+                        hp: calcStat(starter1gen.base.hp, starter1gen.nature, starter1gen.ivs.hp, starter1gen.level, starter1gen.evs.hp, true),
+                        atk: calcStat(starter1gen.base.atk, starter1gen.nature, starter1gen.ivs.atk, starter1gen.level, starter1gen.evs.atk),
+                        def: calcStat(starter1gen.base.def, starter1gen.nature, starter1gen.ivs.def, starter1gen.level, starter1gen.evs.def),
+                        spatk: calcStat(starter1gen.base.spatk, starter1gen.nature, starter1gen.ivs.spatk, starter1gen.level, starter1gen.evs.spatk),
+                        spdef: calcStat(starter1gen.base.spdef, starter1gen.nature, starter1gen.ivs.spdef, starter1gen.level, starter1gen.evs.spdef),
+                        spd: calcStat(starter1gen.base.spd, starter1gen.nature, starter1gen.ivs.spd, starter1gen.level, starter1gen.evs.spd),
+                    };
                     queries.insertPokemon(dbClient, { owner_id: userObj.id,  pokemon_id: starter1gen.uuid, pokemon: starter1gen });
                     userMap.set(userId, { ...userObj, party: starter1gen });
                     await messageHandler.deleteMessage(interaction, 1);
