@@ -1,7 +1,6 @@
 const userMap = require('../objects/userMap.js');
-const messageHandler = require('../handlers/MessageHandler.js');
+const MessageManager = require('../managers/MessageManager');
 const generatePokemon = require('../util/generatePokemon.js');
-const rawPokemon = require('../data/models/pokemon-raw.js');
 const messages = require('../data/messages/messages.js');
 const { getRole, getMember } = require('../util/getDiscordInfo.js');
 
@@ -9,6 +8,7 @@ const catchBot = {
 
     start: function(discordClient, dbClient, token, guild) {
 
+        let messageManager = new MessageManager(discordClient);
 
         discordClient.once('ready', async () => {
             console.log(`catchBot: ready to serve ${userMap.size} users`);
@@ -16,61 +16,64 @@ const catchBot = {
 
         discordClient.on('interactionCreate', async interaction => {
 
-            console.log('interacting..');
-            const btnId = interaction.customId;
+            messageManager.setInteraction(interaction);
 
             const userId = interaction.user.id;
             const currentUser = userMap.get(userId);
 
             if (interaction.isCommand()) {
 
-                if (interaction.commandName === 'search') {
+                const cmdId = interaction.commandName;
+
+                if (cmdId === 'search') {
                     
-                    if (currentUser.isInBattle) return await messageHandler.replyEphemeralMessage(interaction, { content: "Please exit your current battle before searching for another..." });
+                    if (currentUser.isInBattle) return await messageManager.replyAlreadyInBattle();
 
                     // currently hard coded to encounter caterpie
                     // in the future this will pull from a list of available area encounters
                     // defined by the channel
-                    let raw = rawPokemon[10];
-                    let generated = await generatePokemon(raw);
+                    const generated = await generatePokemon(10, 5);
                     const message = await messages.msgStartBattle(generated, userId);
-                    await messageHandler.replyMessage(interaction, message);
+                    await messageManager.replyMessage(message);
 
                     // lock user into battle
                     currentUser.isInBattle = true;
                     currentUser.battling = generated;
-                    currentUser.battleMessage;
 
                 }
 
             } else if (interaction.isMessageComponent()) {
 
+                const btnId = interaction.customId;
+
+                messageManager.setButtonDetails();
+
                 // guard clause to prevent users from interacting with prompts they did not initiate
-                if (currentUser.id != btnId.split('|')[1]) return messageHandler.replyEphemeralMessage(interaction, { content: "This is not your battle!" });
+                if (currentUser.id != btnId.split('|')[1]) return messageManager.replyNotYourBattle();
 
                 if (btnId.match(/attackPokemon[1-9]*/)){
 
-                    await messageHandler.deleteMessage(interaction, 1);
+                    await messageManager.deleteThisMessage();
                     console.log('Begin battle...');
                     // IMPLEMENT BATTLE LOGIC
 
                 } else if (btnId.match(/swapPokemon[1-9]*/)){
 
-                    await messageHandler.deleteMessage(interaction, 1);
+                    await messageManager.deleteThisMessage();
                     console.log('Swapping pokemon...');
                     // IMPLEMENT SWAP LOGIC
 
                 } else if (btnId.match(/catchPokemon[1-9]*/)){
 
-                    await messageHandler.deleteMessage(interaction, 1);
+                    await messageManager.deleteThisMessage();
                     console.log('Catching pokemon...');
                     // IMPLEMENT CATCH LOGIC
 
                 } else if (btnId.match(/runPokemon[1-9]*/)){
                     
-                    console.log(interaction);
-                    await deleteMessage(interaction.message.channelId, interaction.message.author.id, interaction.message.id);
-                    currentUser.isInBattle = false;    
+                    await messageManager.deleteThisMessage();
+                    // reset user battle settings
+                    currentUser.isInBattle = false;
                     currentUser.battling = {};
 
                 }
@@ -79,21 +82,6 @@ const catchBot = {
 
         discordClient.login(token);
 
-        async function deleteMessage (channel, userID, messageId) {
-            discordClient.channels.fetch(channel)
-                .then((ch) => {
-                    ch.messages.fetch({
-                        limit: 100
-                    }).then(messages => {
-                        const msgs = messages.filter(m => m.author.id === userID)
-                        msgs.forEach(m => {
-                            if(m.id === messageId){
-                                m.delete();
-                            }
-                        })
-                    });
-                })
-        }
     }
 
 }
