@@ -1,17 +1,25 @@
+// objs
 const MessageManager = require('../managers/MessageManager.js');
-const messages = require('../data/messages/messages.js');
-const queries = require('../db/queries.js');
-const generatePokemon = require('../util/generatePokemon.js');
-const { getRole, getMember } = require('../util/getDiscordInfo.js');
-const userMap = require('../objects/userMap.js');
+const User = require('../objects/User');
 const { default: Collection } = require('@discordjs/collection');
+
+//fxns
+const generatePokemon = require('../util/generatePokemon.js');
+const queries = require('../db/queries.js');
+const { getRole, getMember } = require('../util/getDiscordInfo.js');
+
+// data
+const messages = require('../data/messages/messages.js');
+const userMap = require('../data/userMap.js');
 
 const profBot = {
 
 
     start: function(discordClient, dbClient, token, guild) {
 
+        // used to hold data for users mid registration process
         const registeringUsers = new Collection();
+
         let messageManager = new MessageManager(discordClient);
 
         discordClient.once('ready', async () => {
@@ -40,7 +48,7 @@ const profBot = {
                 if (cmdId === 'profile') {
 
                     await interaction.deferReply();
-                    const result = await queries.getUser(dbClient, { id: userId });
+                    const result = userMap.get(userId);
                     const resMessage = await messages.msgShowProfile(result);
                     await messageManager.editMessage(resMessage);
 
@@ -49,8 +57,12 @@ const profBot = {
                 if (cmdId === 'team') {
 
                     console.log(JSON.stringify(currentUser.party));
-                    const resMessage = await messages.msgShowPokemon(currentUser.party[interaction.options.getSubcommand() - 1]);
-                    messageManager.replyEphemeralMessage(resMessage);
+                    if(currentUser.party[interaction.options.getSubcommand() - 1]){
+                        const resMessage = await messages.msgShowPokemon(currentUser.party[interaction.options.getSubcommand() - 1]);
+                        messageManager.replyEphemeralMessage(resMessage);
+                    } else {
+                        messageManager.replyNoPokemonInSlot();
+                    }
                     
                 }   
 
@@ -58,7 +70,6 @@ const profBot = {
                     
                 const userId = interaction.user.id;
                 const memObj = await getMember(discordClient, userId);
-                const user = memObj.user;
                 const label = interaction.customId;
                 
                 messageManager.setButtonDetails();
@@ -79,36 +90,23 @@ const profBot = {
                 } else if (label.match(/selectStarter[1-9]*/)) {
 
                     await messageManager.deleteThisMessage();
-                    await messageManager.sendLoadingMessage(memObj);
                     let starter1gen = await generatePokemon(label.charAt(label.length-1), 20);
                     queries.insertPokemon(dbClient, { owner_id: userId,  pokemon_id: starter1gen.uuid, pokemon: starter1gen });
-                    registeringUsers.set(userId, { ...registeringUsers.get(userId), party: starter1gen });
-                    await messageManager.deleteThisMessage();
+                    registeringUsers.set(userId, { ...registeringUsers.get(userId), starter: starter1gen });
                     await messageManager.sendDirectMessage(memObj, messages.msgConfirmRegistration);
                     
                 } else if (label === 'confirmRegistration') {
 
                     await messageManager.deleteThisMessage();
                     await messageManager.sendLoadingMessage(memObj);
-                    const finalUser = 
-                    {
-                        id: interaction.user.id,
-                        username: memObj.user.username,
-                        avatar: registeringUsers.get(userId).avatar,
-                        pkmnCaught: 1,
-                        pkmnSeen: 1,
-                        badges: 0,
-                        money: 5000,
-                        party: [registeringUsers.get(userId).party],
-                        isInBattle: false,
-                        battling: {}
-                    };
-                    console.log(finalUser);
+                    const finalUser = new User(interaction.user.id, memObj.user.username, registeringUsers.get(userId).avatar, registeringUsers.get(userId).starter);
                     await queries.insertUser(dbClient, interaction.user.id, finalUser);
+                    // add fully created User object to user map and remove json from registeringUsers list
                     userMap.set(userId, finalUser);
+                    registeringUsers.delete(userId);
                     memObj.roles.add(await getRole(discordClient, "trainer"));
-                    console.log(JSON.stringify(finalUser));
                     await messageManager.deleteThisMessage();
+                    await messageManager.sendRegisteredMessage(memObj);
 
                 }
             }

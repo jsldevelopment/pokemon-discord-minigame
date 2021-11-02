@@ -7,11 +7,16 @@ module.exports = async function(id, level) {
 
     let raw = rawPokemon[id];
 
-    const netStats = await calcStats(raw.base);
+    const nature = natures[Math.floor(Math.random() * natures.length)];
+    const ivs = getIvs();
+    const evs = getEvs();
+    const netStats = await calcStats(level, raw.base, nature, ivs, evs);
+    console.log(netStats);
 
     const pokemon = new Pokemon(
         uuid(),
         Date.now(),
+        raw.name,
         id,
         raw.types,
         level,
@@ -19,9 +24,9 @@ module.exports = async function(id, level) {
         raw.base,
         Math.floor(Math.random() * 101) < raw.genderRatio ? 1 : 0,
         Math.floor(Math.random() * 101) < raw.abilities.abilityRatio ? raw.abilities.ability1 : raw.abilities.ability2,
-        natures[Math.floor(Math.random() * natures.length)],
-        getIvs(),
-        getEvs(),
+        nature,
+        ivs,
+        evs,
         raw.moves,
         raw.learned,
         netStats

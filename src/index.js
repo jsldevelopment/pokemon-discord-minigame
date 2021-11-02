@@ -4,7 +4,7 @@ const { profToken, catchToken, dbId, dbSecret, guildId } = require('../config.js
 const profBot = require('./bots/profBot.js');
 const catchBot = require('./bots/catchBot.js');
 const queries = require('./db/queries.js');
-const userMap = require('./objects/userMap.js');
+const userMap = require('./data/userMap.js');
 
 const dbClient = new cassandra.Client({
     cloud: { secureConnectBundle: './secure-connect-pokemon.zip' },

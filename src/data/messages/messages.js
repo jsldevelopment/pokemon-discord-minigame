@@ -48,8 +48,8 @@ const messages = {
         }
     },
 
-    msgStartBattle: async function(id) {
-        const file = new MessageAttachment(`./src/data/img/icons/${id}.png`);
+    msgStartBattle: async function(pokemon, id) {
+        const file = new MessageAttachment(`./src/data/img/icons/${pokemon.id}.png`);
         const embed = [embeds.battleStartEmbed(pokemon)];
         const embedRows = buttons.rowBattle(id);
         return {

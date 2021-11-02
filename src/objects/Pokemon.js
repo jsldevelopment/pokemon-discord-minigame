@@ -1,6 +1,6 @@
 class Pokemon {
 
-    constructor(uuid, captured, id, types, level, evolves, base, gender, ability, nature, ivs, evs, moves, learned, stats) {
+    constructor(uuid, captured, name, id, types, level, evolves, base, gender, ability, nature, ivs, evs, moves, learned, stats) {
         /**
          * @type UUID
          */
@@ -10,6 +10,8 @@ class Pokemon {
          * @type Date
          */
         this.captured = captured;
+
+        this.name = name;
         this.id = id;
         this.types = types;
         this.level = level; 

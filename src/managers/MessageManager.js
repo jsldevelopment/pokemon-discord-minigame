@@ -9,13 +9,17 @@ class MessaageManager {
         this.interaction = interaction;
     }
 
-    // set button interaction specific details
     setButtonDetails(){
         this.message = this.interaction.message.id;
         this.author = this.interaction.message.author.id;
         this.channel = this.interaction.message.channelId;
     }
 
+    setCommandDetails(){
+        this.channel = this.interaction.channelId;
+    }
+
+    // general messaging
     async replyMessage (message) {
     
         await this.interaction.reply(message);
@@ -53,6 +57,21 @@ class MessaageManager {
         
     }
     
+    // predefined messages
+    async sendRegisteredMessage (member) {
+        
+        await member.send({ content: 'You have been succesfully registered.' });
+        
+    }
+
+    async sendCapturedBroadcast (user, pokemon) {
+
+        const channel = await this.getChannel();
+        channel.send({ content: `${user.username} has succesfully caught a level ${pokemon.level} ${pokemon.name}` });
+        
+    }
+
+    // delete functions
     async deleteThisMessage () {
 
         this.client.channels.fetch(this.channel)
@@ -77,6 +96,15 @@ class MessaageManager {
 
     async replyNotYourBattle () {
         await this.interaction.reply({ content: "This is not your battle!", ephemeral: true });
+    }
+
+    async replyNoPokemonInSlot () {
+        await this.interaction.reply({ content: "You don't have a pokemon in that slot!", ephemeral: true });
+    }
+
+    //util
+    async getChannel(){
+        return await this.client.channels.fetch(this.channel);
     }
 
 }

@@ -109,6 +109,7 @@ const embedConfirm = {
 
 // create prompt for profile
 const profileEmbed = (profile) => {
+	console.log("loading profile" + JSON.stringify(profile));
 	return {
 		color: 0x0099ff,
 		title: `${profile.username}`,
@@ -119,11 +120,11 @@ const profileEmbed = (profile) => {
 		fields: [
 			{
 				name: "Captured: ",
-				value: profile.pkmnCaught.toString()
+				value: profile.pokedex.caught.toString()
 			},
 			{
 				name: "Seen: ",
-				value: profile.pkmnSeen.toString()
+				value: profile.pokedex.seen.toString()
 			},
 			{
 				name: "Badges: ",

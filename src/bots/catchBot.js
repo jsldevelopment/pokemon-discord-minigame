@@ -1,8 +1,12 @@
-const userMap = require('../objects/userMap.js');
+// objs
 const MessageManager = require('../managers/MessageManager');
+
+// fxns
 const generatePokemon = require('../util/generatePokemon.js');
+
+// data
 const messages = require('../data/messages/messages.js');
-const { getRole, getMember } = require('../util/getDiscordInfo.js');
+const userMap = require('../data/userMap.js');
 
 const catchBot = {
 
@@ -23,6 +27,7 @@ const catchBot = {
 
             if (interaction.isCommand()) {
 
+                messageManager.setCommandDetails();
                 const cmdId = interaction.commandName;
 
                 if (cmdId === 'search') {
@@ -65,9 +70,16 @@ const catchBot = {
 
                 } else if (btnId.match(/catchPokemon[1-9]*/)){
 
+                    // implement logic for catch rates etc
                     await messageManager.deleteThisMessage();
-                    console.log('Catching pokemon...');
-                    // IMPLEMENT CATCH LOGIC
+                    console.log('Pokemon caught');
+                    console.log(currentUser);
+                    currentUser.party[currentUser.party.length] = currentUser.battling;
+                    await messageManager.sendCapturedBroadcast(currentUser, currentUser.battling);
+                    // reset user battle settings
+                    currentUser.isInBattle = false;
+                    currentUser.battling = {};
+
 
                 } else if (btnId.match(/runPokemon[1-9]*/)){
                     
