@@ -8,11 +8,13 @@ module.exports = async function(id, level) {
 
     let raw = rawPokemon[id];
 
-    const nature = Natures[Math.floor(Math.random() * 25)];
+    const natures = Object.keys(Natures);
+    const nature = natures[Math.floor(Math.random() * natures.length)];
+    
     const ivs = getIvs();
     const evs = getEvs();
     const netStats = await calcStats(level, raw.base, nature, ivs, evs);
-    
+
     const pokemon = new Pokemon(
         uuid(),
         Date.now(),

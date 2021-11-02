@@ -53,7 +53,10 @@ class MessaageManager {
     
     async sendLoadingMessage (member) {
         
-        await member.send({ content: 'Please wait...' });
+        await member.send({ content: 'Please wait...' })
+            .then((res) => {
+                this.loadingMessageId = res.id;
+            })
         
     }
     
@@ -87,6 +90,15 @@ class MessaageManager {
                     })
                 });
             })
+    }
+
+    async deleteLoadingMessage () {
+
+        const channel = await this.getChannel();
+        await channel.fetch(this.loadingMessageId).then((msg) => {
+            msg.delete();
+        });
+
     }
 
     // CONST EPHEMERAL ALERT MESSAGES

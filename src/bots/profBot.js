@@ -20,13 +20,12 @@ const profBot = {
         // used to hold data for users mid registration process
         const registeringUsers = new Collection();
 
-        let messageManager = new MessageManager(discordClient);
-
         discordClient.once('ready', async () => {
             console.log(`profBot: ready to serve ${userMap.size} users`);
         });
 
         discordClient.on('guildMemberAdd', async member => {
+            let messageManager = new MessageManager(discordClient);
             await messageManager.sendDirectMessage(
                 member, 
                 messages["msgWelcome"]
@@ -34,6 +33,8 @@ const profBot = {
         });
 
         discordClient.on('interactionCreate', async interaction => {
+
+            let messageManager = new MessageManager(discordClient);
 
             messageManager.setInteraction(interaction);
 
@@ -67,6 +68,9 @@ const profBot = {
 
             } else if (interaction.isMessageComponent()) {
                     
+                let messageManager = new MessageManager(discordClient);
+                messageManager.setInteraction(interaction);
+
                 const userId = interaction.user.id;
                 const memObj = await getMember(discordClient, userId);
                 const label = interaction.customId;
@@ -104,7 +108,7 @@ const profBot = {
                     userMap.set(userId, finalUser);
                     registeringUsers.delete(userId);
                     memObj.roles.add(await getRole(discordClient, "trainer"));
-                    await messageManager.deleteThisMessage();
+                    await messageManager.deleteLoadingMessage();
                     await messageManager.sendRegisteredMessage(memObj);
 
                 }
