@@ -2,17 +2,17 @@ const uuid = require('uuid').v4;
 const rawPokemon = require('../data/models/pokemon-raw.js');
 const Pokemon = require('../objects/Pokemon');
 const calcStats = require('../util/calculateStat');
+const { Natures } = require('../util/constants');
 
 module.exports = async function(id, level) {
 
     let raw = rawPokemon[id];
 
-    const nature = natures[Math.floor(Math.random() * natures.length)];
+    const nature = Natures[Math.floor(Math.random() * 25)];
     const ivs = getIvs();
     const evs = getEvs();
     const netStats = await calcStats(level, raw.base, nature, ivs, evs);
-    console.log(netStats);
-
+    
     const pokemon = new Pokemon(
         uuid(),
         Date.now(),
@@ -35,10 +35,6 @@ module.exports = async function(id, level) {
     return pokemon;
 
 }
-
-const natures = [
-    "lonely"
-];
 
 const getIvs = () => {
     return {

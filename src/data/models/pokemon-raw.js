@@ -1,8 +1,10 @@
+const { Types } = require('../../util/constants');
+
 module.exports = {
     "1": {
         "id": 1,
         "name": "Bulbasaur",
-        "types": ["grass","poison"],
+        "types": [Types.grass, Types.poison],
         "genderRatio": 88,
         "abilities": {
             "ability1": {
@@ -31,7 +33,7 @@ module.exports = {
     "10": {
         "id": 10,
         "name": "Caterpie",
-        "types": ["bug"],
+        "types": [Types.bug],
         "genderRatio": 30,
         "abilities": {
             "ability1": {

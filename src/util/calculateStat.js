@@ -1,11 +1,8 @@
 module.exports = async (level, stats, nature, iv, ev) => {
         
     const calcedStats = {};
-    console.log(stats);
 
     for (let stat in stats) {
-
-        console.log(`${stats[stat]} + ${nature} + ${iv[stat]} + ${level}`);
 
         let newStat = 0;
         if(stat === "hp") {
@@ -16,7 +13,6 @@ module.exports = async (level, stats, nature, iv, ev) => {
 
         // check for natures
         // hardy, docile, serious, bashful, and quirky do not affect stats in any way
-        console.log(natureTable[nature]);
 
         if(natureTable[nature]) {
             // natures arent being calc'd
@@ -32,7 +28,6 @@ module.exports = async (level, stats, nature, iv, ev) => {
 
     }
 
-    console.log(calcedStats);
     return calcedStats;
 
 }

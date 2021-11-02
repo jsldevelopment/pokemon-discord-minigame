@@ -109,7 +109,6 @@ const embedConfirm = {
 
 // create prompt for profile
 const profileEmbed = (profile) => {
-	console.log("loading profile" + JSON.stringify(profile));
 	return {
 		color: 0x0099ff,
 		title: `${profile.username}`,
@@ -145,7 +144,6 @@ const profileEmbed = (profile) => {
 
 // create prompt for pokemon
 const pokemonEmbed = (pokemon) => {
-	console.log(JSON.stringify(pokemon));
 	return {
 		color: promptColors[pokemon.types[0]],
 		title: `${pokemon.name}`,

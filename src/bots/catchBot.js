@@ -72,8 +72,6 @@ const catchBot = {
 
                     // implement logic for catch rates etc
                     await messageManager.deleteThisMessage();
-                    console.log('Pokemon caught');
-                    console.log(currentUser);
                     currentUser.party[currentUser.party.length] = currentUser.battling;
                     await messageManager.sendCapturedBroadcast(currentUser, currentUser.battling);
                     // reset user battle settings

@@ -56,7 +56,6 @@ const profBot = {
 
                 if (cmdId === 'team') {
 
-                    console.log(JSON.stringify(currentUser.party));
                     if(currentUser.party[interaction.options.getSubcommand() - 1]){
                         const resMessage = await messages.msgShowPokemon(currentUser.party[interaction.options.getSubcommand() - 1]);
                         messageManager.replyEphemeralMessage(resMessage);
