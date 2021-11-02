@@ -48,75 +48,7 @@ class MessaageManager {
     async sendDirectMessage (member, message) {
         
         await member.send(message);
-        
-    }
     
-    async sendLoadingMessage (member) {
-        
-        await member.send({ content: 'Please wait...' })
-            .then((res) => {
-                this.loadingMessageId = res.id;
-            })
-        
-    }
-    
-    // predefined messages
-    async sendRegisteredMessage (member) {
-        
-        await member.send({ content: 'You have been succesfully registered.' });
-        
-    }
-
-    async sendCapturedBroadcast (user, pokemon) {
-
-        const channel = await this.getChannel();
-        channel.send({ content: `${user.username} has succesfully caught a level ${pokemon.level} ${pokemon.name}` });
-        
-    }
-
-    // delete functions
-    async deleteThisMessage () {
-
-        this.client.channels.fetch(this.channel)
-            .then((ch) => {
-                ch.messages.fetch({
-                    limit: 5
-                }).then(messages => {
-                    const msgs = messages.filter(m => m.author.id === this.author)
-                    msgs.forEach(m => {
-                        if(m.id === this.message){
-                            m.delete();
-                        }
-                    })
-                });
-            })
-    }
-
-    async deleteLoadingMessage () {
-
-        const channel = await this.getChannel();
-        await channel.fetch(this.loadingMessageId).then((msg) => {
-            msg.delete();
-        });
-
-    }
-
-    // CONST EPHEMERAL ALERT MESSAGES
-    async replyAlreadyInBattle () {
-        await this.interaction.reply({ content: "Please exit your current battle before searching for another..." , ephemeral: true });
-    }
-
-    async replyNotYourBattle () {
-        await this.interaction.reply({ content: "This is not your battle!", ephemeral: true });
-    }
-
-    async replyNoPokemonInSlot () {
-        await this.interaction.reply({ content: "You don't have a pokemon in that slot!", ephemeral: true });
-    }
-
-    //util
-    async getChannel(){
-        return await this.client.channels.fetch(this.channel);
     }
 
 }

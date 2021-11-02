@@ -3,102 +3,15 @@ const { MessageActionRow } = require('discord.js');
 
 const buttons = {
 
-    btnBeginRegistration: new Button({
-        id: 'beginRegistration',
-        label: 'Begin'
+    btnSample: new Button({
+        id: 'sampleButton',
+        label: 'Sample'
     }),
-    btnSelectAvatar1: new Button({
-        id: 'selectAvatar1',
-        label: 'May'
-    }),
-    btnSelectAvatar2: new Button({
-        id: 'selectAvatar2',
-        label: 'Brendan'
-    }),
-    btnSelectAvatar3: new Button({
-        id: 'selectAvatar3',
-        label: 'Aqua'
-    }),
-    btnSelectAvatar4: new Button({
-        id: 'selectAvatar4',
-        label: 'Magma'
-    }),
-    btnSelectAvatar5: new Button({
-        id: 'selectAvatar5',
-        label: 'Fighter'
-    }),
-    btnSelectAvatar6: new Button({
-        id: 'selectAvatar6',
-        label: 'Beauty'
-    }),
-    btnSelectAvatar7: new Button({
-        id: 'selectAvatar7',
-        label: 'Scientist'
-    }),
-    btnSelectAvatar8: new Button({
-        id: 'selectAvatar8',
-        label: 'Fisher'
-    }),
-    btnSelectAvatar9: new Button({
-        id: 'selectAvatar9',
-        label: 'Elder'
-    }),
-    btnSelectStarter1: new Button({
-        id: 'selectStarter1',
-        label: 'Bulbasaur'
-    }),
-    btnSelectStarter2: new Button({
-        id: 'selectStarter4',
-        label: 'Charmander'
-    }),
-    btnSelectStarter3: new Button({
-        id: 'selectStarter7',
-        label: 'Squirtle'
-    }),
-    btnConfirmRegistration: new Button({
-        id: 'confirmRegistration',
-        label: 'Confirm'
-    }),
-    btnAttack: (id) => {
-        return new Button({
-            id: 'attackPokemon|' + id,
-            label: 'Attack'
-        });
-    },
-    btnSwap: (id) => {
-        return new Button({
-            id: 'swapPokemon|' + id,
-            label: 'Swap'
-        })
-    },
-    btnCatch: (id) => {
-        return new Button({
-            id: 'catchPokemon|' + id,
-            label: 'Catch'
-        })
-    },
-    btnRun: (id) => {
-        return new Button({
-            id: 'runPokemon|' + id,
-            label: 'Run'
-        });
-    }
-
 }
 
 const buttonRows = {
 
-    rowRegister:            new MessageActionRow().addComponents( buttons.btnBeginRegistration.button ),
-    rowSelectAvatar:        new MessageActionRow().addComponents( buttons.btnSelectAvatar1.button, buttons.btnSelectAvatar2.button ),
-    rowSelectStarter:       new MessageActionRow().addComponents( buttons.btnSelectStarter1.button ),
-    rowConfirmRegistration: new MessageActionRow().addComponents( buttons.btnConfirmRegistration.button ),
-    rowBattle: (id) => {
-        return new MessageActionRow().addComponents( 
-            buttons.btnAttack(id).button, 
-            buttons.btnSwap(id).button,
-            buttons.btnCatch(id).button, 
-            buttons.btnRun(id).button)
-    }
+    rowSample: new MessageActionRow().addComponents( buttons.btnSample.button )
     
 }
 

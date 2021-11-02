@@ -5,7 +5,9 @@
   "main": "Message.js",
   "scripts": {
     "commands": "node ./deploy-commands.js",
-    "test": "nodemon src/index.js"
+    "test": "nodemon src/index.js",
+    "build": "node src/index.js",
+    "deploy": "node ./deploy-commands.js && npm run build"
   },
   "author": "",
   "license": "ISC",
