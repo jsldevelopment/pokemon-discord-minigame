@@ -3,6 +3,7 @@ const MessageManager = require('../managers/MessageManager');
 
 // data
 const messages = require('../data/messages/messages.js');
+const pokemon = require('../data/models/pokemon');
 
 const bot = {
 
@@ -10,7 +11,7 @@ const bot = {
 
         let messageManager = new MessageManager(discordClient);
 
-        discordClient.once('ready', async () => {
+        discordClient.once('ready', async() => {
             console.log(`bot is ready to serve`);
         });
 
@@ -21,26 +22,27 @@ const bot = {
             if (interaction.isCommand()) {
 
                 messageManager.setCommandDetails();
-                const cmdId = interaction.commandName;
 
-                if (cmdId === 'getId') {
-                    
+                if (interaction.commandName === 'register') {
+
                     // implement some command logic
+                    console.log(pokemon[interaction.options.getInteger('starter')]);
 
                 }
 
-            } else if (interaction.isMessageComponent()) {
+                if (interaction.commandName === 'catch') {
 
-                const btnId = interaction.customId;
-
-                messageManager.setButtonDetails();
-
-                if (btnId.match(/accept/)){
-                    
-                    // implement button logic
+                    // implement some command logic
+                    console.log('catching...');
 
                 }
-            
+
+                if (interaction.commandName === 'battle') {
+
+                    // implement some command logic
+                    console.log('battle...');
+
+                }
             }
         });
 
