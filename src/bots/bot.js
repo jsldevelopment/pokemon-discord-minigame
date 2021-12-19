@@ -25,6 +25,7 @@ const bot = {
 
                 messageManager.setCommandDetails();
 
+                // simple registration script
                 if (interaction.commandName === 'register') {
 
                     const starter = pokemon[interaction.options.getInteger('starter')];
@@ -32,7 +33,7 @@ const bot = {
 
                     userMap.set(id, {
                         "id": id,
-                        "party": [starter],
+                        "party": [{...starter, level: 1 }],
                         "box": [],
                         "expedition": {
                             active: false,
@@ -45,6 +46,7 @@ const bot = {
 
                 }
 
+                // go on an expedition with lead pokemon
                 if (interaction.commandName === 'expedition') {
 
                     // get user and check to ensure area exists
@@ -58,8 +60,8 @@ const bot = {
                         messageManager.replyMessage(`Going on a 20 second expedition to ${areaFound.name}`);
                         return user.expedition = {
                             active: true,
-                            returning: Date.now() + 20000,
-                            expLength: 3
+                            returning: Date.now() + 500,
+                            expLength: 10
                         }
                     }
 
@@ -67,20 +69,9 @@ const bot = {
 
                     // if current time is greater than the return time of the exp
                     if (Date.now() > user.expedition.returning) {
-                        const results = this.resolveExpedition(user.expedition.expLength, areaFound);
-                        let reply = "";
-                        if (!results.length) {
-                            reply = "Sorry, nothing was found during this expedition!";
-                        }
-                        results.forEach(pokemon => {
-                            if (user.party.length >= 3) {
-                                user.box.push(pokemon);
-                            } else {
-                                user.party.push(pokemon);
-                            }
-                            reply += pokemon.dex.name + ", ";
-                        })
-                        messageManager.replyMessage(reply);
+                        messageManager.replyMessage(
+                            this.resolveExpedition(user, areaFound)
+                        );
                         return user.expedition = {
                             active: false,
                             returning: 0
@@ -92,28 +83,32 @@ const bot = {
 
                 }
 
+                // display current party in detail
                 if (interaction.commandName === 'party') {
 
                     const party = userMap.get(interaction.user.id).party;
                     let reply = "";
                     party.forEach(pokemon => {
-                        reply += pokemon.dex.name + ", ";
+                        reply += `Level ${pokemon.level} ${pokemon.dex.name}, \n`;
                     })
                     messageManager.replyMessage(reply);
 
                 }
 
+                // display high level overview of box pokemon
                 if (interaction.commandName === 'box') {
 
                     const box = userMap.get(interaction.user.id).box;
                     let reply = "";
                     if (!box.length) reply = "Sorry, your box is empty!";
                     box.forEach(pokemon => {
-                        reply += pokemon.dex.name + ", ";
+                        reply += `Level ${pokemon.level} ${pokemon.dex.name}, \n`;
                     })
                     messageManager.replyMessage(reply);
 
                 }
+
+                // TODO: add swapping command for party -> box and vice versa
             }
         });
 
@@ -128,15 +123,66 @@ const bot = {
                 .getSeconds()) : (now.getSeconds()));
     },
 
-    resolveExpedition: function(expLength, area) {
+    resolveExpedition: function(user, area) {
+
+        // eventual message back to user
+        let reply = "";
+
+        // determine all pokemon found
         const caught = [];
-        for (let i = 0; i < expLength; i++) {
-            const foundPokemon = area.available[0];
+        for (let i = 0; i < user.expedition.expLength; i++) {
+            const foundPokemon = area.available[Math.floor(Math.random() * area.available.length)].id;
             if (Math.random() > .5) caught.push(foundPokemon);
         }
-        return caught;
-    }
+        reply += `Captured Pokemon: ${caught.length} \n`;
 
+        // get id array of all owned pokemon
+        const ownedPokemon = user.party.concat(user.box);
+        const ownedPokemonIds = [];
+        ownedPokemon.forEach(pokemon => ownedPokemonIds.push(pokemon.id));
+
+        // all pokemon found that are already owned
+        const caughtOld = caught.filter(id => ownedPokemonIds.includes(id));
+
+        // all pokemon found that are new
+        const caughtNew = caught.filter(id => !ownedPokemonIds.includes(id));
+        const caughtNewFiltered = [...new Set(caughtNew)];
+
+        caughtNewFiltered.forEach((newId) => {
+            reply += `You caught a ${pokemon[newId].dex.name} on your expedition! \n`;
+        });
+
+        // update levels/exp for pokemon already owned
+        const caughtMap = new Map();
+        caughtOld.forEach((caught) => {
+            if (!caughtMap.get(caught)) {
+                caughtMap.set(caught, 1);
+            } else {
+                const numCaught = caughtMap.get(caught) + 1;
+                caughtMap.set(caught, numCaught);
+            }
+        });
+
+        caughtMap.forEach((value, key) => {
+            reply += `Old pokemon converted to token: ${pokemon[key].dex.name} : ${value} \n`;
+        })
+
+        // for now, just increment level by the number of tokens. no exp gains.
+        caughtMap.forEach((value, key) => {
+            ownedPokemon.find(pokemon => pokemon.id === key).level += value;
+        })
+
+        // add all new pokemon to box/party
+        caughtNewFiltered.forEach((caught) => {
+            if (user.party.length >= 3) {
+                user.box.push({...pokemon[caught], level: 1 });
+            } else {
+                user.party.push({...pokemon[caught], level: 1 });
+            }
+        });
+
+        return reply;
+    }
 
 }
 
