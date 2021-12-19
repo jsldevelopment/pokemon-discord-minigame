@@ -19,18 +19,10 @@ module.exports = {
         });
     },
 
-    registerNewUser: async function(id, starter) {
-        fs.readFile("db.txt", "utf-8", (err, data) => {
-            const users = JSON.parse(data);
-            const newUser = {
-                "id": id,
-                "party": [starter]
-            }
-            users.push(newUser);
-            fs.writeFile("./db.txt", JSON.stringify(users), (err) => {
-                if (err) console.log(err);
-                console.log("Successfully Written to File.");
-            });
+    updateDB: async function(data) {
+        fs.writeFile("./db.txt", JSON.stringify(data), (err) => {
+            if (err) console.log(err);
+            console.log("Successfully Written to File.");
         });
     }
 

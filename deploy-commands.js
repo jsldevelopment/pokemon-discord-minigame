@@ -9,22 +9,21 @@ const commands = fs.readdirSync('./src/commands/').filter(file => file.endsWith(
 const rest = new REST({ version: '9' }).setToken(token);
 
 for (const file of commands) {
-	const command = require(`./src/commands/${file}`);
-	commandsList.push(command.data.toJSON());
+    const command = require(`./src/commands/${file}`);
+    commandsList.push(command.data);
 }
 
-(async () => {
-	try {
-		console.log('Started refreshing application (/) commands.');
+(async() => {
+    try {
+        console.log('Started refreshing application (/) commands.');
 
-		await rest.put(
-			Routes.applicationGuildCommands(clientId, guildId),
-			{ body: commandsList },
-		);
+        await rest.put(
+            Routes.applicationGuildCommands(clientId, guildId), { body: commandsList },
+        );
 
-		console.log('Successfully reloaded application (/) commands.');
-		
-	} catch (error) {
-		console.error(error);
-	}
+        console.log('Successfully reloaded application (/) commands.');
+
+    } catch (error) {
+        console.error(error);
+    }
 })();

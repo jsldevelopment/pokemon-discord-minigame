@@ -3,7 +3,7 @@ const { token, dbId, dbSecret, guildId } = require('../config.json');
 const cassandra = require('cassandra-driver');
 const bot = require('./bots/bot.js');
 const userMap = require('./objects/userMap');
-const { getUsers } = require('./db/queries');
+const { getUsers, updateDB } = require('./db/queries');
 
 const dbClient = new cassandra.Client({
     cloud: { secureConnectBundle: './<datastax-connection-file>.zip' },
@@ -13,12 +13,22 @@ const dbClient = new cassandra.Client({
 
 (async() => {
 
+    // update local map with db
     getUsers()
         .then((users) => {
             users.forEach((user) => {
                 userMap.set(user.id, user);
             });
         })
+
+    // sync db with current local storage
+    setInterval(() => {
+        const newData = [];
+        userMap.forEach((val, key, map) => {
+            newData.push(val);
+        })
+        updateDB(newData);
+    }, 30000);
 
     // instantiate the bot client
     // add any necessary intents here
