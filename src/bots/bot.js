@@ -36,7 +36,8 @@ const bot = {
                         "party": [starter],
                         "expedition": {
                             active: false,
-                            returning: 10000000000000
+                            returning: 10000000000000,
+                            expLength: 0
                         }
                     })
 
@@ -46,23 +47,41 @@ const bot = {
 
                 if (interaction.commandName === 'expedition') {
 
+                    // get user and check to ensure area exists
                     const user = userMap.get(interaction.user.id);
                     const areaFound = area[interaction.options.getString('area')];
 
                     if (!areaFound) return messageManager.replyMessage(`That area does not exist.`);
-                    if (Date.now() > user.expedition.returning) {
-                        user.expedition.active = false;
-                        user.expedition.returning = 10000000000000;
-                        return messageManager.replyMessage("Welcome back from your expedition");
+
+                    // if user isnt currently on an expedition, send them on one and set the new expedition details
+                    if (!user.expedition.active) {
+                        messageManager.replyMessage(`Going on a 20 second expedition to ${areaFound.name}`);
+                        return user.expedition = {
+                            active: true,
+                            returning: Date.now() + 20000,
+                            expLength: 3
+                        }
                     }
-                    if (user.expedition.active) return messageManager.replyMessage(`You are currently on an expedition until ${Date.parse(user.expedition.returning)}`);
 
+                    // if user is currently on an expedition, we need to evaluate if they are done or not
 
-                    user.expedition.active = true;
-                    user.expedition.returning = Date.now() + 20000;
+                    // if current time is greater than the return time of the exp
+                    if (Date.now() > user.expedition.returning) {
+                        const results = this.resolveExpedition(user.expedition.expLength, areaFound);
+                        let reply = "";
+                        results.forEach(pokemon => {
+                            user.party.push(pokemon);
+                            reply += pokemon.dex.name + ", ";
+                        })
+                        messageManager.replyMessage(reply);
+                        return user.expedition = {
+                            active: false,
+                            returning: 0
+                        }
+                    }
 
-                    return messageManager.replyMessage(`Going on a 20 second expedition to ${areaFound.name}`);
-
+                    // else, they are still on an expedition
+                    return messageManager.replyMessage(`You are currently on an expedition until ${this.getReturnTime(user.expedition.returning)}!`);
 
                 }
 
@@ -81,7 +100,24 @@ const bot = {
 
         discordClient.login(token);
 
+    },
+
+    getReturnTime: function(ts) {
+        let now = new Date(ts);
+        return now.getHours() + ':' +
+            ((now.getMinutes() < 10) ? ("0" + now.getMinutes()) : (now.getMinutes())) + ':' + ((now.getSeconds() < 10) ? ("0" + now
+                .getSeconds()) : (now.getSeconds()));
+    },
+
+    resolveExpedition: function(expLength, area) {
+        const caught = [];
+        for (let i = 0; i < expLength; i++) {
+            const foundPokemon = area.available[0];
+            if (Math.random() > .5) caught.push(foundPokemon);
+        }
+        return caught;
     }
+
 
 }
 
