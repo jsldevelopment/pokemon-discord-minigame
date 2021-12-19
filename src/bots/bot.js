@@ -5,7 +5,6 @@ const MessageManager = require('../managers/MessageManager');
 const messages = require('../data/messages/messages.js');
 const pokemon = require('../data/models/pokemon');
 const area = require('../data/models/area');
-const { registerNewUser, getUser } = require('../db/queries');
 const userMap = require('../objects/userMap');
 
 const bot = {
@@ -34,9 +33,10 @@ const bot = {
                     userMap.set(id, {
                         "id": id,
                         "party": [starter],
+                        "box": [],
                         "expedition": {
                             active: false,
-                            returning: 10000000000000,
+                            returning: 0,
                             expLength: 0
                         }
                     })
@@ -69,8 +69,15 @@ const bot = {
                     if (Date.now() > user.expedition.returning) {
                         const results = this.resolveExpedition(user.expedition.expLength, areaFound);
                         let reply = "";
+                        if (!results.length) {
+                            reply = "Sorry, nothing was found during this expedition!";
+                        }
                         results.forEach(pokemon => {
-                            user.party.push(pokemon);
+                            if (user.party.length >= 3) {
+                                user.box.push(pokemon);
+                            } else {
+                                user.party.push(pokemon);
+                            }
                             reply += pokemon.dex.name + ", ";
                         })
                         messageManager.replyMessage(reply);
@@ -90,6 +97,18 @@ const bot = {
                     const party = userMap.get(interaction.user.id).party;
                     let reply = "";
                     party.forEach(pokemon => {
+                        reply += pokemon.dex.name + ", ";
+                    })
+                    messageManager.replyMessage(reply);
+
+                }
+
+                if (interaction.commandName === 'box') {
+
+                    const box = userMap.get(interaction.user.id).box;
+                    let reply = "";
+                    if (!box.length) reply = "Sorry, your box is empty!";
+                    box.forEach(pokemon => {
                         reply += pokemon.dex.name + ", ";
                     })
                     messageManager.replyMessage(reply);
