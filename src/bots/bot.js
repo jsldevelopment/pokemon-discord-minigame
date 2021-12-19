@@ -89,7 +89,7 @@ const bot = {
                     const party = userMap.get(interaction.user.id).party;
                     let reply = "";
                     party.forEach(pokemon => {
-                        reply += `Level ${pokemon.level} ${pokemon.dex.name}, \n`;
+                        reply += `Level ${pokemon.level} ${pokemon.dex.name} \n`;
                     })
                     messageManager.replyMessage(reply);
 
@@ -102,13 +102,24 @@ const bot = {
                     let reply = "";
                     if (!box.length) reply = "Sorry, your box is empty!";
                     box.forEach(pokemon => {
-                        reply += `Level ${pokemon.level} ${pokemon.dex.name}, \n`;
+                        reply += `Level ${pokemon.level} ${pokemon.dex.name} \n`;
                     })
                     messageManager.replyMessage(reply);
 
                 }
 
                 // TODO: add swapping command for party -> box and vice versa
+                // if (interaction.commandName === 'swap') {
+
+                //     const party = userMap.get(interaction.user.id).party;
+                //     const teamPokemon = area[interaction.options.getString('team')];
+
+                //     if (party)
+
+                //         const box = userMap.get(interaction.user.id).box;
+                //     const boxPokemon = area[interaction.options.getString('box')];
+
+                // }
             }
         });
 
@@ -134,7 +145,6 @@ const bot = {
             const foundPokemon = area.available[Math.floor(Math.random() * area.available.length)].id;
             if (Math.random() > .5) caught.push(foundPokemon);
         }
-        reply += `Captured Pokemon: ${caught.length} \n`;
 
         // get id array of all owned pokemon
         const ownedPokemon = user.party.concat(user.box);
