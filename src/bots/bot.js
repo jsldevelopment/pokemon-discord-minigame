@@ -109,17 +109,27 @@ const bot = {
                 }
 
                 // TODO: add swapping command for party -> box and vice versa
-                // if (interaction.commandName === 'swap') {
+                // sample syntax for command: /swap <choice: 1,2,3> <input: pkmn-name>
+                // sample responses: "swapped <choice> for <<pkmn-name>"
+                // OR "you do not own <pkmn-name>"
+                if (interaction.commandName === 'swap') {
 
-                //     const party = userMap.get(interaction.user.id).party;
-                //     const teamPokemon = area[interaction.options.getString('team')];
+                    const party = userMap.get(interaction.user.id).party;
+                    const teamPokemon = party[interaction.options.getInteger('team') - 1];
+                    console.log(teamPokemon.dex.name);
 
-                //     if (party)
+                    const box = userMap.get(interaction.user.id).box;
+                    const boxPokemon = interaction.options.getString('box');
+                    const pokemonToSwap = box.find(pokemon => pokemon.dex.name === boxPokemon);
 
-                //         const box = userMap.get(interaction.user.id).box;
-                //     const boxPokemon = area[interaction.options.getString('box')];
-
-                // }
+                    if (pokemonToSwap) {
+                        box.push(party[interaction.options.getInteger('team') - 1]);
+                        party[interaction.options.getInteger('team') - 1] = pokemonToSwap;
+                        messageManager.replyMessage(`Succesfully swapped ${teamPokemon.dex.name} for ${pokemonToSwap.dex.name}.`);
+                    } else {
+                        messageManager.replyMessage(`Pokemon ${boxPokemon} not found.`);
+                    }
+                }
             }
         });
 

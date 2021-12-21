@@ -6,8 +6,18 @@ module.exports = {
         "options": [{
                 "name": "team",
                 "description": "Move which Pokemon to box?",
-                "type": 3,
-                "required": true
+                "type": 4,
+                "required": true,
+                "choices": [{
+                    "name": "1",
+                    "value": 1
+                }, {
+                    "name": "2",
+                    "value": 2
+                }, {
+                    "name": "3",
+                    "value": 3
+                }]
             },
             {
                 "name": "box",
